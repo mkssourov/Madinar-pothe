@@ -285,7 +285,7 @@ tbody tr:hover td{background:var(--accent-bg)}
 
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <img class="logo-img" src="https://i.ibb.co.com/whxDfZrk/project-20230222-0024369-01.png" alt="logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <img class="logo-img" src="https://i.ibb.co.com/7dqZmZd5/file-00000000f4048230af73edb6af98ebf6-1.png" alt="logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
     <div class="logo-fallback"><i class="fa-solid fa-fingerprint"></i></div>
     <div><h2>MADINAR POTHE<h2><p>HR Management System</p></div>
   </div>
@@ -392,32 +392,19 @@ tbody tr:hover td{background:var(--accent-bg)}
 <script>
 /* ═══ CONFIG ═══ */
 const PHOTOS={
-   "NAYMUR RAHMAN":   "https://i.ibb.co.com/QF0d3f7c/1775063687724-jpg.jpg",
-  "FAHAD FARAZI":    "https://i.ibb.co.com/2302tqJT/1775023890755-jpg.jpg",
-  "JIBON SARKER":    " ",
   "MKS SOMRSAT":     "https://i.ibb.co.com/YFpFmgTZ/IMG-20260507-WA0013-jpg.jpg",
-  "ZUBAYER HOSSAIN": "https://i.ibb.co.com/27qN9MGm/FB-IMG-1775063998580-1-jpg.jpg",
-  "MAMUN SARKER":    " ",
-  "RAKIB SARKER":     "https://i.ibb.co.com/hxct2rd5/1775063978884-jpg-1.jpg",
-  "ABJOL SARKER":    " ",
-  "SALIM SARKER":    " ",
+  
 };
 const ECFG={
-  "NAYMUR RAHMAN":       { salary: 20000, leaveDays: 0, color: "#2f81f7" },
-  "FAHAD FARAZI":        { salary: 18000, leaveDays: 0, color: "#3fb950" },
-  "JIBON SARKER":        { salary: 10200, leaveDays: 0, color: "#f85149" },
+  
   "MKS SOMRSAT":         { salary: 0,     leaveDays: 0, color: "#e87ba4" },
-  "ZUBAYER HOSSAIN":     { salary: 20000, leaveDays: 0, color: "#f78166" },
-  "MAMUN SARKER":        { salary: 10200, leaveDays: 0, color: "#2f81f7" },
-  "RAKIB SARKER":        { salary: 15000, leaveDays: 0, color: "#3fb950" },
-  "ABJOL SARKER":        { salary: 10200, leaveDays: 0, color: "#f85149" },
-  "SALIM SARKER":        { salary: 18000, leaveDays: 0, color: "#a371f7" },
+  
 };
-const CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRKLe15yfAAG2cY47l0fjsF9oPum_Db8JEUGB-kFlq9BsywkI-zBrpzHl4XX0g-wbARM7YvJ-wM6SdL/pub?gid=1893840663&single=true&output=csv";
+const CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vQNCP-dFakmDCiDBh5CLIkptayIUySzL5uUBvPbclJbG6zRzyFA10Wh8H97yF85bvWOGI5z6yRpRLKT/pub?output=csv";
 /* EMPLOYEE_DATA sheet — N, FROM DATE, TO DATE, ID, SALARY columns
    ⚠️  gid নম্বর আপনার EMPLOYEE_DATA শিটের gid দিয়ে পরিবর্তন করুন।
    Google Sheets-এ শিটটি খুলে URL-এ gid=XXXXX দেখুন। */
-const CSV_PAY="https://docs.google.com/spreadsheets/d/e/2PACX-1vRKLe15yfAAG2cY47l0fjsF9oPum_Db8JEUGB-kFlq9BsywkI-zBrpzHl4XX0g-wbARM7YvJ-wM6SdL/pub?gid=258314962&single=true&output=csv";
+const CSV_PAY="https://docs.google.com/spreadsheets/d/e/2PACX-1vQNCP-dFakmDCiDBh5CLIkptayIUySzL5uUBvPbclJbG6zRzyFA10Wh8H97yF85bvWOGI5z6yRpRLKT/pub?output=csv";
 let rawData=[],employees={},allMonths=[],curPage="dashboard",payData=[];
 
 /* ── helpers ── */
