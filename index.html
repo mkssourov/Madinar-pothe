@@ -392,19 +392,20 @@ tbody tr:hover td{background:var(--accent-bg)}
 <script>
 /* ═══ CONFIG ═══ */
 const PHOTOS={
-  "MKS SOMRSAT":     "https://i.ibb.co.com/YFpFmgTZ/IMG-20260507-WA0013-jpg.jpg",
   
+  "MKS SOMRSAT":     "https://i.ibb.co.com/YFpFmgTZ/IMG-20260507-WA0013-jpg.jpg",
+
 };
 const ECFG={
   
-  "MKS SOMRSAT":         { salary: 0,     leaveDays: 0, color: "#e87ba4" },
-  
+  "MKS SOMRSAT":         { salary: 10,     leaveDays: 0, color: "#e87ba4" },
+
 };
-const CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vQNCP-dFakmDCiDBh5CLIkptayIUySzL5uUBvPbclJbG6zRzyFA10Wh8H97yF85bvWOGI5z6yRpRLKT/pub?output=csv";
+const CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vQNCP-dFakmDCiDBh5CLIkptayIUySzL5uUBvPbclJbG6zRzyFA10Wh8H97yF85bvWOGI5z6yRpRLKT/pub?gid=1415605503&single=true&output=csv";
 /* EMPLOYEE_DATA sheet — N, FROM DATE, TO DATE, ID, SALARY columns
    ⚠️  gid নম্বর আপনার EMPLOYEE_DATA শিটের gid দিয়ে পরিবর্তন করুন।
    Google Sheets-এ শিটটি খুলে URL-এ gid=XXXXX দেখুন। */
-const CSV_PAY="https://docs.google.com/spreadsheets/d/e/2PACX-1vQNCP-dFakmDCiDBh5CLIkptayIUySzL5uUBvPbclJbG6zRzyFA10Wh8H97yF85bvWOGI5z6yRpRLKT/pub?output=csv";
+const CSV_PAY="https://docs.google.com/spreadsheets/d/e/2PACX-1vQNCP-dFakmDCiDBh5CLIkptayIUySzL5uUBvPbclJbG6zRzyFA10Wh8H97yF85bvWOGI5z6yRpRLKT/pub?gid=519308619&single=true&output=csv";
 let rawData=[],employees={},allMonths=[],curPage="dashboard",payData=[];
 
 /* ── helpers ── */
@@ -1501,3 +1502,5 @@ loadData();
 </script>
 </body>
 </html>
+
+
