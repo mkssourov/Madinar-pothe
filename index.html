@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PREMIO SYSTEM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f0f4fa;--bg2:#ffffff;--bg3:#f8fafc;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
+  --accent:#2563eb;--accent2:#3b82f6;--accent-bg:#eff6ff;--accent-border:#bfdbfe;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;--red-border:#fecaca;
+  --yellow:#d97706;--yellow-bg:#fffbeb;--yellow-border:#fde68a;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-border:#ddd6fe;
+  --orange:#ea580c;--orange-bg:#fff7ed;--orange-border:#fed7aa;
+  --r:10px;--rl:14px;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --sh-md:0 4px 12px rgba(37,99,235,.1),0 2px 4px rgba(0,0,0,.04);
+  --sh-lg:0 12px 28px rgba(37,99,235,.15),0 4px 8px rgba(0,0,0,.06);
+  --sh-glow:0 0 20px rgba(37,99,235,.18),0 4px 12px rgba(37,99,235,.12);
+  --fn:'Noto Sans Bengali','Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fn);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden}
+
+/* ── GLOW ANIMATIONS ── */
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 8px rgba(37,99,235,.3),0 2px 8px rgba(37,99,235,.15)}50%{box-shadow:0 0 20px rgba(37,99,235,.5),0 4px 16px rgba(37,99,235,.25)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+@keyframes slide-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes count-up{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+
+/* ── SIDEBAR ── */
+.sidebar{width:258px;height:100vh;position:fixed;left:0;top:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:transform .3s ease;box-shadow:4px 0 24px rgba(37,99,235,.08)}
+.sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563eb,#7c3aed,#2563eb);background-size:200% 100%;animation:shimmer 3s linear infinite}
+.sidebar-logo{padding:18px 16px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+.logo-img{width:75px;height:75px;border-radius:12px;object-fit:cover;flex-shrink:0;border:2px solid var(--accent-border);box-shadow:0 0 12px rgba(37,99,235,.2)}
+.logo-fallback{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);display:none;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0;box-shadow:0 0 14px rgba(37,99,235,.35)}
+.sidebar-logo h1{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.sidebar-logo p{font-size:10.5px;color:var(--text3);margin-top:1px}
+.sidebar-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.nav-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:10px 10px 4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--r);cursor:pointer;color:var(--text2);font-size:13.5px;transition:all .2s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:var(--fn);font-weight:500;position:relative}
+.nav-item:hover{background:var(--accent-bg);color:var(--accent);transform:translateX(2px)}
+.nav-item.active{background:linear-gradient(135deg,var(--accent-bg),#f0f4ff);color:var(--accent);border:1px solid var(--accent-border);font-weight:700;box-shadow:0 0 12px rgba(37,99,235,.12),inset 0 0 8px rgba(37,99,235,.04)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:linear-gradient(180deg,#2563eb,#7c3aed);border-radius:0 2px 2px 0}
+.nav-item i{width:16px;text-align:center;font-size:13px;flex-shrink:0}
+.nav-badge{margin-left:auto;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;box-shadow:0 0 8px rgba(37,99,235,.3)}
+.sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
+.sync-status{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text3)}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse-dot 2s infinite;flex-shrink:0;box-shadow:0 0 6px rgba(22,163,74,.5)}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;backdrop-filter:blur(2px)}
+
+/* ── TOPBAR ── */
+.main{margin-left:258px;min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 26px;display:flex;align-items:center;justify-content:space-between;z-index:50;box-shadow:0 2px 12px rgba(37,99,235,.07)}
+.topbar-left{display:flex;align-items:center;gap:11px}
+.topbar-left h2{font-size:16px;font-weight:800;color:var(--text)}
+.page-date-chip{font-size:11.5px;color:var(--text3);background:var(--bg3);padding:3px 11px;border-radius:20px;border:1px solid var(--border)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.topbar-btn{display:flex;align-items:center;gap:6px;padding:8px 15px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg2);color:var(--text2);font-size:12.5px;cursor:pointer;font-family:var(--fn);transition:all .2s;font-weight:600;box-shadow:var(--sh)}
+.topbar-btn:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border);box-shadow:var(--sh-glow);transform:translateY(-1px)}
+.topbar-btn.primary{background:linear-gradient(135deg,#2563eb,#3b82f6);border:none;color:#fff;box-shadow:0 3px 12px rgba(37,99,235,.35)}
+.topbar-btn.primary:hover{box-shadow:0 6px 20px rgba(37,99,235,.45);transform:translateY(-2px)}
+.content{padding:24px;flex:1;animation:slide-in .3s ease}
+.page{display:none}.page.active{display:block}
+.menu-toggle{display:none;background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px;box-shadow:var(--sh);transition:all .2s}
+.card:hover{box-shadow:var(--sh-md)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.card-title i{color:var(--accent)}
+
+/* ── STAT CARDS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px;position:relative;overflow:hidden;box-shadow:var(--sh);transition:all .25s;cursor:default}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--sh-lg)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--rl) var(--rl) 0 0}
+.stat-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(37,99,235,.04) 0%,transparent 70%);pointer-events:none}
+.stat-card.blue::before{background:linear-gradient(90deg,#1d4ed8,#60a5fa)}
+.stat-card.blue:hover{box-shadow:0 8px 24px rgba(37,99,235,.2),var(--sh)}
+.stat-card.green::before{background:linear-gradient(90deg,#15803d,#4ade80)}
+.stat-card.green:hover{box-shadow:0 8px 24px rgba(22,163,74,.2),var(--sh)}
+.stat-card.yellow::before{background:linear-gradient(90deg,#b45309,#fbbf24)}
+.stat-card.yellow:hover{box-shadow:0 8px 24px rgba(217,119,6,.2),var(--sh)}
+.stat-card.orange::before{background:linear-gradient(90deg,#c2410c,#fb923c)}
+.stat-card.orange:hover{box-shadow:0 8px 24px rgba(234,88,12,.2),var(--sh)}
+.stat-label{font-size:11px;color:var(--text3);margin-bottom:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.stat-val{font-size:32px;font-weight:800;color:var(--text);line-height:1;animation:count-up .4s ease}
+.stat-sub{font-size:11.5px;color:var(--text3);margin-top:7px}
+.stat-icon{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:32px;opacity:.06}
+
+/* ── EMPLOYEE GRID ── */
+.emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px}
+.emp-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:22px 16px;cursor:pointer;transition:all .25s;text-align:center;box-shadow:var(--sh);position:relative;overflow:hidden}
+.emp-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(37,99,235,.05) 0%,transparent 65%);opacity:0;transition:opacity .3s}
+.emp-card:hover{border-color:var(--accent-border);transform:translateY(-4px);box-shadow:var(--sh-lg);border-color:rgba(37,99,235,.3)}
+.emp-card:hover::before{opacity:1}
+.emp-avatar{width:70px;height:70px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:2.5px solid var(--border2);background:var(--bg3);box-shadow:0 0 0 4px var(--accent-bg);transition:all .25s}
+.emp-card:hover .emp-avatar{box-shadow:0 0 0 4px rgba(37,99,235,.15),0 0 16px rgba(37,99,235,.12);transform:scale(1.04)}
+.emp-avatar img{width:100%;height:100%;object-fit:cover}
+.emp-avatar-fb{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;margin:0 auto 12px;border:2.5px solid var(--border2);box-shadow:0 0 0 4px var(--accent-bg);transition:all .25s}
+.emp-card:hover .emp-avatar-fb{box-shadow:0 0 0 4px rgba(37,99,235,.15),0 0 16px rgba(37,99,235,.12);transform:scale(1.04)}
+.emp-name{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:3px}
+.emp-uid{font-size:11px;color:var(--text3);margin-bottom:11px}
+.emp-pills{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+
+/* ── PILLS ── */
+.pill{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:600;display:inline-flex;align-items:center;gap:3px}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.pill-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border)}
+.pill-blue{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border)}
+.pill-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+.pill-orange{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-border)}
+.pill-friday{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+.pill-bonus{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-border)}
+.emp-salary{font-size:12px;color:var(--text2)}
+.emp-salary strong{color:var(--green);font-weight:700}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;border-radius:var(--rl);border:1px solid var(--border);box-shadow:var(--sh)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--bg3);padding:11px 16px;text-align:left;color:var(--text3);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:11px 16px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .15s}
+tbody tr:hover td{background:var(--accent-bg)}
+.time-chip{font-size:12px;font-family:'Inter',monospace;background:var(--bg3);padding:3px 8px;border-radius:6px;color:var(--text2);border:1px solid var(--border2);font-weight:500}
+.friday-row td{background:#faf5ff}
+.leave-row td{background:var(--accent-bg)}
+
+/* ── PROFILE ── */
+.profile-hero{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:26px;display:flex;align-items:center;gap:22px;margin-bottom:18px;position:relative;overflow:hidden;box-shadow:var(--sh-md)}
+.profile-hero::after{content:'';position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.08),transparent 70%);pointer-events:none}
+.profile-avatar-lg{width:88px;height:88px;border-radius:50%;overflow:hidden;flex-shrink:0;border:3px solid var(--accent-border);box-shadow:0 0 0 6px var(--accent-bg),0 0 20px rgba(37,99,235,.15)}
+.profile-avatar-lg img{width:100%;height:100%;object-fit:cover}
+.profile-avatar-fb{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;flex-shrink:0;border:3px solid var(--accent-border);box-shadow:0 0 0 6px var(--accent-bg),0 0 20px rgba(37,99,235,.15)}
+.profile-info h2{font-size:19px;font-weight:800;color:var(--text);margin-bottom:3px}
+.profile-info p{font-size:12.5px;color:var(--text3);margin-bottom:8px}
+.profile-meta{display:flex;gap:7px;flex-wrap:wrap}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:18px}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px;text-align:center;box-shadow:var(--sh);transition:all .2s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
+.kpi-val{font-size:26px;font-weight:800;line-height:1;margin-bottom:5px}
+.kpi-lbl{font-size:10.5px;color:var(--text3);font-weight:600;line-height:1.3}
+
+/* ── SALARY BREAKDOWN ── */
+.salary-breakdown{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:18px;box-shadow:var(--sh)}
+.salary-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px;transition:background .15s}
+.salary-row:hover{background:var(--bg3);margin:0 -8px;padding:9px 8px;border-radius:6px}
+.salary-row:last-child{border-bottom:none}
+.salary-row .lbl{color:var(--text2);display:flex;align-items:center;gap:8px}
+.salary-row .val{font-weight:700;color:var(--text)}
+.salary-row.total-row{padding-top:14px;margin-top:4px;border-top:2px solid var(--accent-border)}
+.salary-row.total-row .lbl{color:var(--text);font-weight:700;font-size:15px}
+.salary-row.total-row .val{color:var(--green);font-size:20px;font-weight:800;text-shadow:0 0 20px rgba(22,163,74,.3)}
+.salary-row.deduct-row .val{color:var(--red)}
+.salary-row.bonus-row .val{color:var(--orange)}
+
+/* ── MONTH TABS ── */
+.month-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.month-tab{padding:6px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:var(--fn);transition:all .2s;font-weight:500}
+.month-tab:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border)}
+.month-tab.active{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;border-color:transparent;font-weight:700;box-shadow:0 3px 10px rgba(37,99,235,.3)}
+
+/* ── CUSTOM DATE RANGE FILTER ── */
+.range-filter-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:18px;margin-bottom:18px;box-shadow:var(--sh)}
+.range-filter-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:6px}
+.range-filter-controls{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.range-field{display:flex;flex-direction:column;gap:4px}
+.range-field label{font-size:11px;color:var(--text3);font-weight:600}
+.range-date-input{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:8px 12px;color:var(--text);font-size:13px;font-family:var(--fn);outline:none;transition:all .2s;box-shadow:var(--sh);min-width:150px}
+.range-date-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.range-arrow{color:var(--text3);font-size:14px;margin-bottom:9px}
+.range-quick-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:13px;padding-top:13px;border-top:1px solid var(--border)}
+.quick-range-btn{padding:6px 13px;border-radius:20px;font-size:11.5px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;font-family:var(--fn);transition:all .2s;font-weight:500}
+.quick-range-btn:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border);transform:translateY(-1px);box-shadow:var(--sh-glow)}
+.range-active-banner{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--accent-bg),#f0f4ff);border:1px solid var(--accent-border);border-radius:var(--r);padding:11px 16px;margin-bottom:16px;font-size:13px;color:var(--accent);box-shadow:0 0 14px rgba(37,99,235,.1)}
+.range-active-banner i{font-size:15px}
+.range-active-banner strong{color:var(--text)}
+
+/* ── PAY HISTORY ── */
+.pay-emp-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:16px;box-shadow:var(--sh);overflow:hidden;transition:all .2s}
+.pay-emp-card:hover{box-shadow:var(--sh-md)}
+.pay-emp-header{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg3);cursor:pointer;transition:background .15s}
+.pay-emp-header:hover{background:var(--accent-bg)}
+.pay-emp-avatar{width:42px;height:42px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--border2)}
+.pay-emp-avatar img{width:100%;height:100%;object-fit:cover}
+.pay-emp-avatar-fb{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;border:2px solid var(--border2)}
+.pay-emp-info{flex:1}
+.pay-emp-info h3{font-size:14px;font-weight:700;color:var(--text)}
+.pay-emp-info p{font-size:11.5px;color:var(--text3)}
+.pay-emp-toggle{color:var(--text3);font-size:12px;transition:transform .2s}
+.pay-emp-toggle.open{transform:rotate(180deg)}
+.pay-history-body{display:none;padding:0}
+.pay-history-body.open{display:block}
+.pay-history-row{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border);transition:background .15s}
+.pay-history-row:last-child{border-bottom:none}
+.pay-history-row:hover{background:var(--bg3)}
+.pay-period{flex:1}
+.pay-period-label{font-size:13px;font-weight:600;color:var(--text)}
+.pay-period-dates{font-size:11px;color:var(--text3);margin-top:2px}
+.pay-amount{font-size:14px;font-weight:700;color:var(--green);min-width:110px;text-align:right}
+.pay-badge-paid{display:inline-flex;align-items:center;gap:4px;background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;box-shadow:0 0 8px rgba(22,163,74,.15)}
+.pay-badge-unpaid{display:inline-flex;align-items:center;gap:4px;background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700}
+.pay-empty{padding:24px;text-align:center;color:var(--text3);font-size:13px}
+.pay-summary-strip{display:flex;gap:10px;flex-wrap:wrap;padding:12px 20px;background:linear-gradient(135deg,var(--green-bg),#f0fdf4);border-bottom:1px solid var(--green-border)}
+.pay-summary-item{font-size:12px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:5px}
+
+/* ── SEARCH / FILTER ── */
+.filter-row{display:flex;gap:9px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none}
+.search-box{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:9px 14px 9px 34px;color:var(--text);font-size:13px;font-family:var(--fn);outline:none;transition:all .2s;box-shadow:var(--sh)}
+.search-box:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg),var(--sh)}
+.filter-select{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:9px 14px;color:var(--text2);font-size:13px;font-family:var(--fn);outline:none;cursor:pointer;box-shadow:var(--sh);transition:all .2s}
+.filter-select:focus{border-color:var(--accent)}
+
+/* ── CHARTS ── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.chart-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px;box-shadow:var(--sh)}
+.chart-title{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:flex;align-items:center;gap:10px;font-size:12px}
+.bar-label{width:100px;color:var(--text2);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;font-weight:500}
+.bar-track{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.bar-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1);position:relative}
+.bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 2s linear infinite;background-size:200% 100%}
+.bar-val{width:34px;text-align:right;color:var(--text2);font-weight:700}
+.pie-wrap{display:flex;align-items:center;gap:22px}
+.pie-legend{display:flex;flex-direction:column;gap:10px}
+.pie-item{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.pie-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.donut{position:relative;flex-shrink:0}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.donut-pct{font-size:20px;font-weight:800;color:var(--text);line-height:1}
+.donut-sub{font-size:10px;color:var(--text3);font-weight:600}
+
+/* ── MISC ── */
+.back-btn{display:inline-flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--border2);color:var(--text2);padding:8px 16px;border-radius:var(--r);cursor:pointer;font-size:13px;margin-bottom:18px;font-family:var(--fn);transition:all .2s;font-weight:500;box-shadow:var(--sh)}
+.back-btn:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border);box-shadow:var(--sh-glow)}
+.loading-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#f0f4fa,#e8f0fe);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:999;transition:opacity .5s}
+.loading-overlay.hidden{opacity:0;pointer-events:none}
+.loader{width:40px;height:40px;border:3px solid var(--accent-border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;box-shadow:0 0 16px rgba(37,99,235,.2)}
+.loading-overlay p{font-size:13px;color:var(--text3);font-weight:600}
+.empty-state{text-align:center;padding:48px 24px;color:var(--text3)}
+.empty-state i{font-size:34px;margin-bottom:12px;opacity:.3;display:block}
+.empty-state p{font-size:14px;font-weight:500}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--accent-border);padding:12px 18px;border-radius:var(--r);font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);z-index:200;box-shadow:var(--sh-lg);font-weight:500}
+.toast.show{transform:translateY(0);opacity:1}
+.toast i{color:var(--green)}
+.section-gap{margin-bottom:18px}
+.flex-between{display:flex;justify-content:space-between;align-items:center}
+.text-muted{color:var(--text3);font-size:12px}
+.mt-4{margin-top:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+
+/* ── GLOW ACCENTS on active nav dot ── */
+.nav-item.active i{filter:drop-shadow(0 0 4px rgba(37,99,235,.6))}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.show{display:block}.main{margin-left:0}.menu-toggle{display:block}
+  .stats-row,.kpi-row{grid-template-columns:repeat(2,1fr)}.chart-grid{grid-template-columns:1fr}
+  .content{padding:14px}.topbar{padding:11px 14px}
+}
+@media(max-width:480px){.stats-row,.kpi-row{grid-template-columns:1fr 1fr}.profile-hero{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+<div class="loading-overlay" id="loader"><div class="loader"></div><p>PREMIO SMART ATTENDENCE...</p></div>
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toast-msg">সম্পন্ন</span></div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img class="logo-img" src="https://i.ibb.co.com/whxDfZrk/project-20230222-0024369-01.png" alt="logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="logo-fallback"><i class="fa-solid fa-fingerprint"></i></div>
+    <div><h2>MADINAR POTHE<h2><p>HR Management System</p></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">প্রধান মেনু</div>
+    <button class="nav-item active" onclick="showPage('dashboard')"><i class="fa-solid fa-gauge-high"></i>ড্যাশবোর্ড</button>
+    <button class="nav-item" onclick="showPage('employees')"><i class="fa-solid fa-users"></i>কর্মচারী তালিকা<span class="nav-badge" id="emp-count">0</span></button>
+    <button class="nav-item" onclick="showPage('attendance')"><i class="fa-solid fa-calendar-check"></i>অ্যাটেন্ডেন্স লগ</button>
+    <div class="nav-label">বিশ্লেষণ</div>
+    <button class="nav-item" onclick="showPage('reports')"><i class="fa-solid fa-chart-bar"></i>রিপোর্ট ও বিশ্লেষণ</button>
+    <button class="nav-item" onclick="showPage('salary')"><i class="fa-solid fa-money-bill-wave"></i>বেতন সারসংক্ষেপ</button>
+    <button class="nav-item" onclick="showPage('payhistory')"><i class="fa-solid fa-clock-rotate-left"></i>বেতন পরিশোধ ইতিহাস</button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sync-status"><div class="sync-dot"></div><span id="sync-time">সংযুক্ত</span></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+      <h2 id="page-title">ড্যাশবোর্ড</h2>
+      <span class="page-date-chip" id="page-date"></span>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn" onclick="loadData()"><i class="fa-solid fa-rotate"></i>রিফ্রেশ</button>
+      <button class="topbar-btn primary" onclick="downloadAllReport()"><i class="fa-solid fa-download"></i>রিপোর্ট</button>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-row" id="dash-stats"></div>
+      <div class="chart-grid">
+        <div class="chart-box"><div class="chart-title"><i class="fa-solid fa-chart-bar" style="color:var(--accent)"></i>এই মাসে উপস্থিতি হার</div><div class="bar-chart" id="chart-bar"></div></div>
+        <div class="chart-box"><div class="chart-title"><i class="fa-solid fa-chart-pie" style="color:var(--purple)"></i>সামগ্রিক অবস্থা</div><div class="pie-wrap" id="chart-pie"></div></div>
+      </div>
+      <div class="card"><div class="card-header"><div class="card-title"><i class="fa-solid fa-clock"></i>আজকের লগ</div><span class="text-muted" id="today-label"></span></div><div id="today-table"></div></div>
+    </div>
+
+    <!-- EMPLOYEES -->
+    <div class="page" id="page-employees">
+      <div class="filter-row"><div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input class="search-box" id="emp-search" placeholder="নাম বা UID দিয়ে খুঁজুন..." oninput="filterEmployees()"></div></div>
+      <div class="emp-grid" id="emp-grid"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <button class="back-btn" onclick="showPage('employees')"><i class="fa-solid fa-arrow-left"></i>কর্মচারী তালিকায় ফিরে যান</button>
+      <div id="profile-content"></div>
+    </div>
+
+    <!-- ATTENDANCE LOG -->
+    <div class="page" id="page-attendance">
+      <div class="filter-row">
+        <div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input class="search-box" id="log-search" placeholder="নাম খুঁজুন..." oninput="filterLog()"></div>
+        <select class="filter-select" id="log-month" onchange="filterLog()"><option value="">সব মাস</option></select>
+        <select class="filter-select" id="log-status" onchange="filterLog()">
+          <option value="">সব অবস্থা</option><option value="present">উপস্থিত</option><option value="half">হাফ টাইম</option><option value="absent">অনুপস্থিত</option><option value="leave">অনুমোদিত ছুটি (L)</option><option value="bonus">বোনাস (শুক্রবার)</option>
+        </select>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>তারিখ</th><th>নাম</th><th>UID</th><th>ইন টাইম</th><th>আউট টাইম</th><th>অবস্থা</th></tr></thead><tbody id="log-body"></tbody></table></div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="page" id="page-reports">
+      <div class="filter-row"><select class="filter-select" id="report-month" onchange="renderReports()"></select></div>
+      <div class="card section-gap"><div class="card-header"><div class="card-title"><i class="fa-solid fa-chart-column"></i>কর্মচারীভিত্তিক উপস্থিতি</div></div><div id="report-bars"></div></div>
+      <div class="grid-2">
+        <div class="card"><div class="card-title" style="margin-bottom:13px"><i class="fa-solid fa-trophy" style="color:var(--yellow)"></i>শীর্ষ উপস্থিতি</div><div id="top-present"></div></div>
+        <div class="card"><div class="card-title" style="margin-bottom:13px"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i>সর্বোচ্চ অনুপস্থিতি</div><div id="top-absent"></div></div>
+      </div>
+    </div>
+
+    <!-- SALARY -->
+    <div class="page" id="page-salary">
+      <div class="filter-row"><select class="filter-select" id="sal-month" onchange="renderSalaryPage()"></select></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>কর্মচারী</th><th>মূল বেতন</th><th>উপস্থিত</th><th>হাফ</th><th>অনুপস্থিত</th><th>ছুটি (L)</th><th>বোনাস</th><th>কর্তন</th><th>বোনাস টাকা</th><th>প্রদেয় বেতন</th><th>PDF</th></tr></thead>
+        <tbody id="salary-body"></tbody></table>
+      </div>
+      <div class="mt-4" style="text-align:right"><button class="topbar-btn primary" onclick="downloadSalarySheet()"><i class="fa-solid fa-file-csv"></i>বেতন শিট ডাউনলোড</button></div>
+    </div>
+
+    <!-- PAY HISTORY -->
+    <div class="page" id="page-payhistory">
+      <div class="filter-row">
+        <div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input class="search-box" id="ph-search" placeholder="নাম বা ID দিয়ে খুঁজুন..." oninput="filterPayHistory()"></div>
+        <select class="filter-select" id="ph-status" onchange="filterPayHistory()">
+          <option value="">সব অবস্থা</option>
+          <option value="paid">Paid ✓</option>
+          <option value="unpaid">Unpaid ✗</option>
+        </select>
+      </div>
+      <div id="payhistory-content">
+        <div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i><p>বেতন পরিশোধ ইতিহাস লোড হচ্ছে...</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ CONFIG ═══ */
+const PHOTOS={
+   "NAYMUR RAHMAN":   "https://i.ibb.co.com/QF0d3f7c/1775063687724-jpg.jpg",
+  "FAHAD FARAZI":    "https://i.ibb.co.com/2302tqJT/1775023890755-jpg.jpg",
+  "JIBON SARKER":    " ",
+  "MKS SOMRSAT":     "https://i.ibb.co.com/YFpFmgTZ/IMG-20260507-WA0013-jpg.jpg",
+  "ZUBAYER HOSSAIN": "https://i.ibb.co.com/27qN9MGm/FB-IMG-1775063998580-1-jpg.jpg",
+  "MAMUN SARKER":    " ",
+  "RAKIB SARKER":     "https://i.ibb.co.com/hxct2rd5/1775063978884-jpg-1.jpg",
+  "ABJOL SARKER":    " ",
+  "SALIM SARKER":    " ",
+};
+const ECFG={
+  "NAYMUR RAHMAN":       { salary: 20000, leaveDays: 0, color: "#2f81f7" },
+  "FAHAD FARAZI":        { salary: 18000, leaveDays: 0, color: "#3fb950" },
+  "JIBON SARKER":        { salary: 10200, leaveDays: 0, color: "#f85149" },
+  "MKS SOMRSAT":         { salary: 0,     leaveDays: 0, color: "#e87ba4" },
+  "ZUBAYER HOSSAIN":     { salary: 20000, leaveDays: 0, color: "#f78166" },
+  "MAMUN SARKER":        { salary: 10200, leaveDays: 0, color: "#2f81f7" },
+  "RAKIB SARKER":        { salary: 15000, leaveDays: 0, color: "#3fb950" },
+  "ABJOL SARKER":        { salary: 10200, leaveDays: 0, color: "#f85149" },
+  "SALIM SARKER":        { salary: 18000, leaveDays: 0, color: "#a371f7" },
+};
+const CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRKLe15yfAAG2cY47l0fjsF9oPum_Db8JEUGB-kFlq9BsywkI-zBrpzHl4XX0g-wbARM7YvJ-wM6SdL/pub?gid=1893840663&single=true&output=csv";
+/* EMPLOYEE_DATA sheet — N, FROM DATE, TO DATE, ID, SALARY columns
+   ⚠️  gid নম্বর আপনার EMPLOYEE_DATA শিটের gid দিয়ে পরিবর্তন করুন।
+   Google Sheets-এ শিটটি খুলে URL-এ gid=XXXXX দেখুন। */
+const CSV_PAY="https://docs.google.com/spreadsheets/d/e/2PACX-1vRKLe15yfAAG2cY47l0fjsF9oPum_Db8JEUGB-kFlq9BsywkI-zBrpzHl4XX0g-wbARM7YvJ-wM6SdL/pub?gid=258314962&single=true&output=csv";
+let rawData=[],employees={},allMonths=[],curPage="dashboard",payData=[];
+
+/* ── helpers ── */
+const ini=n=>{const p=n.trim().split(/\s+/);return p.length>=2?p[0][0]+p[1][0]:n.slice(0,2);};
+const pd=s=>{const[d,m,y]=s.split("/");return new Date(+y,+m-1,+d);};
+const fmtBN=n=>"৳"+Math.round(n).toLocaleString("en");
+/* PDF-safe money — ASCII only, no Bengali chars */
+const fmtPDF=n=>"BDT "+Math.round(n).toLocaleString("en");
+const fmtDate=s=>{try{return pd(s).toLocaleDateString("bn-BD",{day:"numeric",month:"short",year:"numeric"});}catch{return s;}};
+const mk=d=>d.getFullYear()+"-"+String(d.getMonth()).padStart(2,"0");
+const mlbl=key=>{const[y,m]=key.split("-");return new Date(+y,+m).toLocaleDateString("bn-BD",{month:"long",year:"numeric"});};
+const norm=n=>Object.keys(ECFG).find(k=>k.toLowerCase()===n.trim().toLowerCase())||n.trim();
+const cfg=n=>ECFG[n]||{salary:10000,leaveDays:2,color:"#888"};
+const isFri=s=>{try{return pd(s).getDay()===5;}catch{return false;}};
+const friList=(y,m)=>{const d=new Date(y,m+1,0).getDate();let f=[];for(let i=1;i<=d;i++)if(new Date(y,m,i).getDay()===5)f.push(i);return f;};
+const wdays=(y,m)=>{const d=new Date(y,m+1,0).getDate();let c=0;for(let i=1;i<=d;i++)if(new Date(y,m,i).getDay()!==5)c++;return c;};
+const rgb=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const toast=msg=>{const t=document.getElementById("toast");document.getElementById("toast-msg").textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);};
+
+function getAtt(recs,year,month){
+  const bd={};
+  recs.forEach(r=>{
+    const dt=pd(r.date);if(dt.getFullYear()!==year||dt.getMonth()!==month)return;
+    const k=r.date;if(!bd[k])bd[k]={...r};
+    if(r.timeOut)bd[k].timeOut=r.timeOut;
+    if(r.isLeave)bd[k].isLeave=true;
+  });
+  return Object.values(bd).map(r=>{
+    const fri=isFri(r.date);let st;
+    if(r.isLeave)st="leave";
+    else if(fri&&r.timeIn)st="bonus";
+    else if(r.timeIn&&r.timeOut)st="present";
+    else if(r.timeIn)st="half";
+    else st="absent";
+    return{...r,status:st,isFriday:fri};
+  }).sort((a,b)=>pd(b.date)-pd(a.date));
+}
+
+/* date input value (YYYY-MM-DD) -> Date object at local midnight */
+function dInput(v){const[y,m,d]=v.split("-");return new Date(+y,+m-1,+d);}
+/* Date -> dd/mm/yyyy string matching CSV format */
+function toCsvDate(d){return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear();}
+
+/* Attendance across an arbitrary [startStr,endStr] range (YYYY-MM-DD inputs), inclusive.
+   Synthesizes an absent/holiday row for every calendar day in range with no CSV record,
+   so date-range view is complete even across month boundaries. */
+function getAttRange(recs,startStr,endStr){
+  const start=dInput(startStr),end=dInput(endStr);
+  if(start>end)return[];
+  const bd={};
+  recs.forEach(r=>{
+    const dt=pd(r.date);
+    if(dt<start||dt>end)return;
+    const k=r.date;if(!bd[k])bd[k]={...r};
+    if(r.timeOut)bd[k].timeOut=r.timeOut;
+    if(r.isLeave)bd[k].isLeave=true;
+  });
+  const out=[];
+  for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
+    const key=toCsvDate(d);
+    const r=bd[key]||{name:"",uid:"",date:key,timeIn:"",timeOut:"",isLeave:false};
+    const fri=d.getDay()===5;let st;
+    if(r.isLeave)st="leave";
+    else if(fri&&r.timeIn)st="bonus";
+    else if(r.timeIn&&r.timeOut)st="present";
+    else if(r.timeIn)st="half";
+    else st="absent";
+    out.push({...r,status:st,isFriday:fri});
+  }
+  return out.sort((a,b)=>pd(b.date)-pd(a.date));
+}
+
+function sbadge(s,fri=false){
+  if(s==="leave")   return`<span class="pill pill-blue"><i class="fa-solid fa-file-circle-check"></i> অনুমোদিত ছুটি</span>`;
+  if(s==="bonus")   return`<span class="pill pill-bonus"><i class="fa-solid fa-star"></i> বোনাস (শুক্রবার)</span>`;
+  if(s==="present") return`<span class="pill pill-green"><i class="fa-solid fa-check"></i> উপস্থিত</span>`;
+  if(s==="half")    return`<span class="pill pill-yellow"><i class="fa-solid fa-clock"></i> হাফ টাইম</span>`;
+  if(fri)           return`<span class="pill pill-friday"><i class="fa-solid fa-umbrella-beach"></i> সাপ্তাহিক ছুটি</span>`;
+  return`<span class="pill pill-red"><i class="fa-solid fa-xmark"></i> অনুপস্থিত</span>`;
+}
+
+/* ── data ── */
+async function loadData(){
+  try{
+    /* Load attendance CSV */
+    const r=await fetch(CSV+"&t="+Date.now());const txt=await r.text();
+    rawData=parseCSV(txt);employees=buildEmp(rawData);allMonths=getAllMo(rawData);
+    populateSel();render();
+    /* Load pay history CSV (EMPLOYEE_DATA sheet) */
+    try{
+      const r2=await fetch(CSV_PAY+"&t="+Date.now());const txt2=await r2.text();
+      payData=parsePayCSV(txt2);
+    }catch{payData=[];}
+    document.getElementById("sync-time").textContent="UPDATE: "+new Date().toLocaleTimeString("bn-BD");
+    toast("WELCOME TO PREMIO SYSTEM");
+  }catch{document.getElementById("sync-time").textContent="লোড ব্যর্থ";}
+  document.getElementById("loader").classList.add("hidden");
+}
+function parseCSV(txt){
+  return txt.trim().split("\n").slice(1).map(l=>{
+    const c=l.split(",");const lv=(c[5]?.trim()||"").toUpperCase();
+    return{name:c[0]?.trim()||"",uid:c[1]?.trim()||"",date:c[2]?.trim()||"",timeIn:c[3]?.trim()||"",timeOut:c[4]?.trim()||"",isLeave:lv==="L"};
+  }).filter(r=>r.name&&r.date);
+}
+
+/* Parse EMPLOYEE_DATA sheet
+   Expected columns (order): N, FROM DATE, TO DATE, ID, SALARY
+   Robust: auto-detects header, handles missing/extra columns */
+function parsePayCSV(txt){
+  if(!txt||!txt.trim())return[];
+  const lines=txt.trim().split("\n").map(l=>l.split(",").map(s=>s.replace(/^["']|["']$/g,"").trim()));
+  if(lines.length<2)return[];
+
+  /* Detect column indices from header */
+  const hdr=lines[0].map(h=>h.toLowerCase());
+  const idxN    =hdr.findIndex(h=>h==="n"||h==="no"||h==="sl");
+  const idxFrom =hdr.findIndex(h=>h.includes("from"));
+  const idxTo   =hdr.findIndex(h=>h.includes("to"));
+  const idxID   =hdr.findIndex(h=>h==="id"||h==="uid"||h==="employee_id"||h==="emp_id");
+  const idxSal  =hdr.findIndex(h=>h.includes("salary")||h.includes("amount")||h.includes("pay"));
+
+  /* Fallback: positional (N=0, FROM=1, TO=2, ID=3, SALARY=4) */
+  const cN   =idxN   >=0?idxN   :0;
+  const cFrom=idxFrom>=0?idxFrom:1;
+  const cTo  =idxTo  >=0?idxTo  :2;
+  const cID  =idxID  >=0?idxID  :3;
+  const cSal =idxSal >=0?idxSal :4;
+
+  const rows=[];
+  for(let i=1;i<lines.length;i++){
+    const c=lines[i];
+    const n       =(c[cN]   ||"").trim();
+    const fromDate=(c[cFrom]||"").trim();
+    const toDate  =(c[cTo]  ||"").trim();
+    const id      =(c[cID]  ||"").trim();
+    const salary  =parseFloat((c[cSal]||"0").replace(/[^\d.]/g,""))||0;
+    if(!id&&!fromDate&&!n)continue;/* skip truly empty rows */
+    const paid=!!(id&&fromDate&&toDate&&salary>0);
+    rows.push({n,fromDate,toDate,id,salary,paid,
+      label:fromDate&&toDate?fromDate+" to "+toDate:fromDate||toDate||n||"—"});
+  }
+  return rows;
+}
+
+/* Match payData rows to an employee by UID */
+function getPayRows(uid){
+  return payData.filter(r=>r.id&&r.id.trim().toLowerCase()===uid.trim().toLowerCase());
+}
+
+/* ══ PAY HISTORY PAGE ══ */
+function renderPayHistory(){
+  const empList=Object.entries(employees);
+  if(!empList.length){
+    document.getElementById("payhistory-content").innerHTML=`<div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i><p>কোনো কর্মচারী পাওয়া যায়নি</p></div>`;
+    return;
+  }
+  if(!payData||payData.length===0){
+    document.getElementById("payhistory-content").innerHTML=`
+      <div class="card" style="border:1px solid var(--yellow-border);background:var(--yellow-bg)">
+        <div class="card-title" style="color:var(--yellow);margin-bottom:10px"><i class="fa-solid fa-triangle-exclamation"></i> EMPLOYEE_DATA শিট পাওয়া যায়নি</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.8">
+          বেতন পরিশোধ ইতিহাস দেখতে আপনার Google Sheets-এ <strong>EMPLOYEE_DATA</strong> নামে একটি শিট তৈরি করুন এবং নিচের কলামগুলো যোগ করুন:<br><br>
+          <code style="background:var(--bg3);padding:4px 10px;border-radius:6px;font-size:12px;border:1px solid var(--border2)">N &nbsp;|&nbsp; FROM DATE &nbsp;|&nbsp; TO DATE &nbsp;|&nbsp; ID &nbsp;|&nbsp; SALARY</code><br><br>
+          তারপর সেই শিটটি Publish করুন এবং URL থেকে <strong>gid</strong> নম্বর কপি করে কোডের <code>CSV_PAY</code> ভেরিয়েবলে বসান।
+        </p>
+        <button class="topbar-btn primary" style="margin-top:14px" onclick="loadData()"><i class="fa-solid fa-rotate"></i> আবার চেষ্টা করুন</button>
+      </div>`;
+    /* Still render employee cards with empty rows so structure is visible */
+  }
+  let html="";
+  empList.forEach(([name,e])=>{
+    const c=cfg(name);const ph=PHOTOS[name];
+    const av=ph
+      ?`<div class="pay-emp-avatar"><img src="${ph}" alt="${name}" onerror="this.parentElement.style.background='${c.color}';this.style.display='none'"></div>`
+      :`<div class="pay-emp-avatar-fb" style="background:${c.color}">${ini(name)}</div>`;
+    const rows=getPayRows(e.uid);
+    const paidCount=rows.filter(r=>r.paid).length;
+    const unpaidCount=rows.filter(r=>!r.paid).length;
+    const totalPaid=rows.filter(r=>r.paid).reduce((s,r)=>s+r.salary,0);
+    const safeId="ph-"+e.uid.replace(/[^a-z0-9]/gi,"_");
+    const summaryPills=rows.length?`
+      <div class="pay-summary-strip">
+        <span class="pay-summary-item"><i class="fa-solid fa-check-circle"></i>Paid: ${paidCount}</span>
+        <span class="pay-summary-item"><i class="fa-solid fa-coins"></i>মোট: ${fmtBN(totalPaid)}</span>
+        ${unpaidCount?`<span class="pay-summary-item" style="color:var(--red)"><i class="fa-solid fa-circle-xmark"></i>Unpaid: ${unpaidCount}</span>`:""}
+      </div>`:
+      `<div class="pay-summary-strip"><span class="pay-summary-item" style="color:var(--text3)"><i class="fa-solid fa-info-circle"></i>এই কর্মচারীর কোনো পেমেন্ট রেকর্ড নেই</span></div>`;
+
+    const rowsHtml=rows.length?rows.map(r=>`
+      <div class="pay-history-row" data-uid="${e.uid}" data-paid="${r.paid?'paid':'unpaid'}">
+        <div style="width:36px;height:36px;border-radius:50%;background:${r.paid?"var(--green-bg)":"var(--red-bg)"};display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid ${r.paid?"var(--green-border)":"var(--red-border)"}">
+          <i class="fa-solid ${r.paid?"fa-check":"fa-xmark"}" style="color:${r.paid?"var(--green)":"var(--red)"};font-size:14px"></i>
+        </div>
+        <div class="pay-period">
+          <div class="pay-period-label">N: ${r.n||"—"}</div>
+          <div class="pay-period-dates"><i class="fa-solid fa-calendar-range" style="font-size:10px"></i> ${r.fromDate||"—"} → ${r.toDate||"—"}</div>
+        </div>
+        <div class="pay-amount">${r.salary?fmtBN(r.salary):"—"}</div>
+        <div>${r.paid?`<span class="pay-badge-paid"><i class="fa-solid fa-circle-check"></i>Paid</span>`:`<span class="pay-badge-unpaid"><i class="fa-solid fa-circle-xmark"></i>Unpaid</span>`}</div>
+      </div>`).join("")
+    :`<div class="pay-empty"><i class="fa-solid fa-inbox" style="font-size:22px;opacity:.3;display:block;margin-bottom:6px"></i>EMPLOYEE_DATA শিটে এই ID-র কোনো রেকর্ড নেই</div>`;
+
+    html+=`
+      <div class="pay-emp-card" data-name="${name}" data-uid="${e.uid}">
+        <div class="pay-emp-header" onclick="togglePayCard('${safeId}')">
+          ${av}
+          <div class="pay-emp-info">
+            <h3>${name}</h3>
+            <p>ID: ${e.uid} &nbsp;|&nbsp; বেতন: ${fmtBN(c.salary)}/মাস &nbsp;|&nbsp; ${rows.length} রেকর্ড (${paidCount} Paid)</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            ${paidCount?`<span class="pay-badge-paid"><i class="fa-solid fa-circle-check"></i>${paidCount} Paid</span>`:""}
+            ${unpaidCount?`<span class="pay-badge-unpaid"><i class="fa-solid fa-circle-xmark"></i>${unpaidCount} Unpaid</span>`:""}
+            <i class="fa-solid fa-chevron-down pay-emp-toggle" id="toggle-${safeId}"></i>
+          </div>
+        </div>
+        <div class="pay-history-body" id="${safeId}">
+          ${summaryPills}
+          ${rowsHtml}
+        </div>
+      </div>`;
+  });
+  document.getElementById("payhistory-content").innerHTML=html||`<div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i><p>কোনো ডেটা নেই</p></div>`;
+}
+
+function togglePayCard(id){
+  const body=document.getElementById(id);
+  const toggle=document.getElementById("toggle-"+id);
+  if(!body)return;
+  const isOpen=body.classList.toggle("open");
+  if(toggle)toggle.classList.toggle("open",isOpen);
+}
+
+function filterPayHistory(){
+  const q=(document.getElementById("ph-search")?.value||"").toLowerCase();
+  const st=document.getElementById("ph-status")?.value||"";
+  document.querySelectorAll(".pay-emp-card").forEach(card=>{
+    const name=(card.dataset.name||"").toLowerCase();
+    const uid=(card.dataset.uid||"").toLowerCase();
+    const nameMatch=!q||name.includes(q)||uid.includes(q);
+    /* Status filter: hide rows inside card or hide card entirely */
+    if(!nameMatch){card.style.display="none";return;}
+    card.style.display="";
+    if(st){
+      card.querySelectorAll(".pay-history-row").forEach(row=>{
+        row.style.display=(!st||row.dataset.paid===st)?"":"none";
+      });
+    }else{
+      card.querySelectorAll(".pay-history-row").forEach(row=>row.style.display="");
+    }
+  });
+}
+function buildEmp(rows){const e={};rows.forEach(r=>{const n=norm(r.name);if(!e[n])e[n]={uid:r.uid,records:[]};e[n].records.push(r);});return e;}
+function getAllMo(rows){const s=new Set();rows.forEach(r=>{try{s.add(mk(pd(r.date)));}catch{}});return Array.from(s).sort().reverse();}
+function populateSel(){
+  ["log-month","report-month","sal-month"].forEach(id=>{
+    const sel=document.getElementById(id);if(!sel)return;
+    const cur=sel.value||allMonths[0]||"";
+    sel.innerHTML=id==="log-month"?`<option value="">সব মাস</option>`:"";
+    allMonths.forEach(m=>{sel.innerHTML+=`<option value="${m}"${m===cur?" selected":""}>${mlbl(m)}</option>`;});
+    if(!sel.value&&id!=="log-month"&&allMonths[0])sel.value=allMonths[0];
+  });
+}
+function render(){
+  document.getElementById("emp-count").textContent=Object.keys(employees).length;
+  document.getElementById("page-date").textContent=new Date().toLocaleDateString("bn-BD",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  document.getElementById("today-label").textContent="আজ: "+new Date().toLocaleDateString("bn-BD");
+  renderDash();renderEmps();renderLog();renderReports();renderSalary();
+}
+
+/* ── DASHBOARD ── */
+function renderDash(){
+  const now=new Date();const y=now.getFullYear();const m=now.getMonth();
+  let tp=0,th=0,tb=0,ec=Object.keys(employees).length;
+  Object.values(employees).forEach(e=>{const a=getAtt(e.records,y,m);tp+=a.filter(r=>r.status==="present").length;th+=a.filter(r=>r.status==="half").length;tb+=a.filter(r=>r.status==="bonus").length;});
+  const wd=wdays(y,m);const mp=ec*wd;const ep=mp?Math.round((tp+th*.5)/mp*100):0;
+  document.getElementById("dash-stats").innerHTML=`
+    <div class="stat-card blue"><i class="fa-solid fa-users stat-icon" style="color:#2563eb"></i><div class="stat-label">মোট কর্মচারী</div><div class="stat-val">${ec}</div><div class="stat-sub">সক্রিয় সদস্য</div></div>
+    <div class="stat-card green"><i class="fa-solid fa-calendar-check stat-icon" style="color:#16a34a"></i><div class="stat-label">এই মাসে উপস্থিত</div><div class="stat-val">${tp}</div><div class="stat-sub">+ ${th} হাফ টাইম</div></div>
+    <div class="stat-card yellow"><i class="fa-solid fa-percent stat-icon" style="color:#d97706"></i><div class="stat-label">উপস্থিতির হার</div><div class="stat-val">${ep}%</div><div class="stat-sub">${wd} কার্যদিবস</div></div>
+    <div class="stat-card orange"><i class="fa-solid fa-star stat-icon" style="color:#ea580c"></i><div class="stat-label">বোনাস এন্ট্রি</div><div class="stat-val">${tb}</div><div class="stat-sub">শুক্রবারে উপস্থিত</div></div>`;
+  const ea=Object.entries(employees).map(([n,e])=>{const a=getAtt(e.records,y,m);const p=a.filter(r=>r.status==="present").length+a.filter(r=>r.status==="half").length*.5;return{name:n,pct:wd?Math.round(p/wd*100):0,color:cfg(n).color};}).sort((a,b)=>b.pct-a.pct);
+  document.getElementById("chart-bar").innerHTML=ea.map(e=>`<div class="bar-row"><div class="bar-label" title="${e.name}">${e.name.split(" ")[0]}</div><div class="bar-track"><div class="bar-fill" style="width:${e.pct}%;background:linear-gradient(90deg,${e.color},${e.color}cc)"></div></div><div class="bar-val">${e.pct}%</div></div>`).join("");
+  const pP=mp?Math.round(tp/mp*100):0,hP=mp?Math.round(th/mp*100):0,bP=mp?Math.round(tb/mp*100):0,aP=Math.max(0,100-pP-hP-bP);
+  const R=54,CX=65,CY=65,CI=2*Math.PI*R;const d1=CI*pP/100,d2=CI*hP/100,d3=CI*bP/100,d4=CI*aP/100;
+  document.getElementById("chart-pie").innerHTML=`
+    <div class="donut"><svg width="130" height="130" viewBox="0 0 130 130">
+      <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="#e2e8f0" stroke-width="14"/>
+      <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="#16a34a" stroke-width="14" stroke-dasharray="${d1} ${CI}" stroke-dashoffset="0" transform="rotate(-90 ${CX} ${CY})"/>
+      <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="#d97706" stroke-width="14" stroke-dasharray="${d2} ${CI}" stroke-dashoffset="${-d1}" transform="rotate(-90 ${CX} ${CY})"/>
+      <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="#ea580c" stroke-width="14" stroke-dasharray="${d3} ${CI}" stroke-dashoffset="${-(d1+d2)}" transform="rotate(-90 ${CX} ${CY})"/>
+      <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="#dc2626" stroke-width="14" stroke-dasharray="${d4} ${CI}" stroke-dashoffset="${-(d1+d2+d3)}" transform="rotate(-90 ${CX} ${CY})"/>
+    </svg><div class="donut-center"><div class="donut-pct">${pP}%</div><div class="donut-sub">উপস্থিত</div></div></div>
+    <div class="pie-legend">
+      <div class="pie-item"><div class="pie-dot" style="background:#16a34a"></div><span style="color:var(--text2)">উপস্থিত</span><strong style="margin-left:4px">${pP}%</strong></div>
+      <div class="pie-item"><div class="pie-dot" style="background:#d97706"></div><span style="color:var(--text2)">হাফ টাইম</span><strong style="margin-left:4px">${hP}%</strong></div>
+      <div class="pie-item"><div class="pie-dot" style="background:#ea580c"></div><span style="color:var(--orange)">বোনাস</span><strong style="margin-left:4px">${bP}%</strong></div>
+      <div class="pie-item"><div class="pie-dot" style="background:#dc2626"></div><span style="color:var(--text2)">অনুপস্থিত</span><strong style="margin-left:4px">${aP}%</strong></div>
+    </div>`;
+  const today=new Date();const ts=String(today.getDate()).padStart(2,"0")+"/"+String(today.getMonth()+1).padStart(2,"0")+"/"+today.getFullYear();
+  const tr=rawData.filter(r=>r.date===ts);
+  document.getElementById("today-table").innerHTML=tr.length
+    ?`<div class="table-wrap"><table><thead><tr><th>নাম</th><th>ইন টাইম</th><th>আউট টাইম</th><th>অবস্থা</th></tr></thead><tbody>${tr.map(r=>{const fri=isFri(r.date);const st=r.isLeave?"leave":fri&&r.timeIn?"bonus":r.timeIn&&r.timeOut?"present":r.timeIn?"half":"absent";return`<tr><td><strong>${r.name}</strong></td><td><span class="time-chip">${r.timeIn||"—"}</span></td><td><span class="time-chip">${r.timeOut||"—"}</span></td><td>${sbadge(st,fri)}</td></tr>`;}).join("")}</tbody></table></div>`
+    :`<div class="empty-state"><i class="fa-solid fa-calendar-day"></i><p>আজকের কোনো রেকর্ড নেই</p></div>`;
+}
+
+/* ── EMPLOYEES ── */
+function renderEmps(){
+  const now=new Date();
+  document.getElementById("emp-grid").innerHTML=Object.keys(employees).map(n=>{
+    const e=employees[n];const c=cfg(n);const a=getAtt(e.records,now.getFullYear(),now.getMonth());
+    const present=a.filter(r=>r.status==="present").length;const half=a.filter(r=>r.status==="half").length;const bonus=a.filter(r=>r.status==="bonus").length;
+    const ph=PHOTOS[n];
+    const av=ph?`<div class="emp-avatar"><img src="${ph}" alt="${n}" onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='flex'"></div><div class="emp-avatar-fb" style="background:${c.color};display:none">${ini(n)}</div>`:`<div class="emp-avatar-fb" style="background:${c.color}">${ini(n)}</div>`;
+    return`<div class="emp-card" onclick="openProfile('${n.replace(/'/g,"\\'")}')">
+      ${av}
+      <div class="emp-name">${n}</div><div class="emp-uid">ID: ${e.uid}</div>
+      <div class="emp-pills">
+        <span class="pill pill-green"><i class="fa-solid fa-check"></i>${present}</span>
+        <span class="pill pill-yellow"><i class="fa-solid fa-clock"></i>${half}</span>
+        ${bonus?`<span class="pill pill-bonus"><i class="fa-solid fa-star"></i>${bonus}</span>`:""}
+      </div>
+      <div class="emp-salary">মাসিক: <strong>${fmtBN(c.salary)}</strong></div>
+    </div>`;
+  }).join("")||`<div class="empty-state"><i class="fa-solid fa-users"></i><p>কোনো কর্মচারী নেই</p></div>`;
+}
+function filterEmployees(){const q=document.getElementById("emp-search").value.toLowerCase();document.querySelectorAll(".emp-card").forEach(c=>{const n=(c.querySelector(".emp-name")?.textContent||"").toLowerCase();const u=(c.querySelector(".emp-uid")?.textContent||"").toLowerCase();c.style.display=(n.includes(q)||u.includes(q))?"":"none";});}
+
+/* ── PROFILE ── */
+function openProfile(name){showPage("profile");renderProfile(name);}
+function renderProfile(name){
+  const e=employees[name];if(!e)return;const c=cfg(name);
+  const months=getAllMo(e.records);const dm=months[0]||mk(new Date());const[y,m]=dm.split("-");
+  const ph=PHOTOS[name];
+  const av=ph?`<div class="profile-avatar-lg"><img src="${ph}" alt="${name}" onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='flex'"></div><div class="profile-avatar-fb" style="background:${c.color};display:none">${ini(name)}</div>`:`<div class="profile-avatar-fb" style="background:${c.color}">${ini(name)}</div>`;
+  document.getElementById("profile-content").innerHTML=`
+    <div class="profile-hero">
+      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,${c.color},#7c3aed);border-radius:14px 14px 0 0"></div>
+      ${av}
+      <div class="profile-info">
+        <h2>${name}</h2><p>কর্মচারী আইডি: ${e.uid}</p>
+        <div class="profile-meta">
+          <span class="pill pill-blue"><i class="fa-solid fa-money-bill"></i>${fmtBN(c.salary)} / মাস</span>
+          <span class="pill pill-green"><i class="fa-solid fa-umbrella-beach"></i>${c.leaveDays} ছুটি / মাস</span>
+          <span class="pill pill-friday"><i class="fa-solid fa-mosque"></i>শুক্রবার সরকারি ছুটি</span>
+          <span class="pill pill-purple"><i class="fa-solid fa-calendar"></i>${months.length} মাসের রেকর্ড</span>
+        </div>
+      </div>
+    </div>
+    <div class="month-tabs" id="pmtabs">${months.map(mk2=>`<button class="month-tab${mk2===dm?" active":""}" onclick="switchMo('${name.replace(/'/g,"\\'")}','${mk2}',this)">${mlbl(mk2)}</button>`).join("")}</div>
+
+    <div class="range-filter-box">
+      <div class="range-filter-head">
+        <div class="card-title" style="font-size:13px"><i class="fa-solid fa-calendar-week"></i>কাস্টম তারিখ রেঞ্জ ফিল্টার</div>
+        <span class="text-muted" style="font-size:11px">যেকোনো শুরু ও শেষ তারিখ দিয়ে উপস্থিতি দেখুন</span>
+      </div>
+      <div class="range-filter-controls">
+        <div class="range-field">
+          <label>শুরুর তারিখ</label>
+          <input type="date" id="range-start" class="range-date-input">
+        </div>
+        <i class="fa-solid fa-arrow-right-long range-arrow"></i>
+        <div class="range-field">
+          <label>শেষ তারিখ</label>
+          <input type="date" id="range-end" class="range-date-input">
+        </div>
+        <button class="topbar-btn primary" onclick="applyRangeFilter('${name.replace(/'/g,"\\'")}')"><i class="fa-solid fa-filter"></i>ফিল্টার করুন</button>
+        <button class="topbar-btn" onclick="clearRangeFilter('${name.replace(/'/g,"\\'")}',${y},${m})"><i class="fa-solid fa-rotate-left"></i>মাসিক ভিউতে ফিরুন</button>
+      </div>
+      <div class="range-quick-row">
+        <span class="text-muted" style="font-size:11px;margin-right:2px">দ্রুত নির্বাচন:</span>
+        <button class="quick-range-btn" onclick="setQuickRange('${name.replace(/'/g,"\\'")}',7)">গত ৭ দিন</button>
+        <button class="quick-range-btn" onclick="setQuickRange('${name.replace(/'/g,"\\'")}',15)">গত ১৫ দিন</button>
+        <button class="quick-range-btn" onclick="setQuickRange('${name.replace(/'/g,"\\'")}',30)">গত ৩০ দিন</button>
+        <button class="quick-range-btn" onclick="setMidMonthRange('${name.replace(/'/g,"\\'")}')">২০ তারিখ → ২০ তারিখ</button>
+      </div>
+    </div>
+
+    <div id="pbody"></div>`;
+  renderPMonth(name,+y,+m);
+}
+
+/* ── CUSTOM RANGE FILTER ── */
+function applyRangeFilter(name){
+  const s=document.getElementById("range-start").value;
+  const e=document.getElementById("range-end").value;
+  if(!s||!e){toast("শুরু ও শেষ তারিখ দুটোই দিন");return;}
+  if(dInput(s)>dInput(e)){toast("শুরুর তারিখ শেষ তারিখের পরে হতে পারবে না");return;}
+  document.querySelectorAll("#pmtabs .month-tab").forEach(b=>b.classList.remove("active"));
+  renderPRange(name,s,e);
+}
+function clearRangeFilter(name,year,month){
+  document.getElementById("range-start").value="";
+  document.getElementById("range-end").value="";
+  const tabs=document.querySelectorAll("#pmtabs .month-tab");
+  const target=mlbl(year+"-"+month);
+  tabs.forEach(b=>{if(b.textContent===target)b.classList.add("active");});
+  renderPMonth(name,year,month);
+}
+function setQuickRange(name,days){
+  const end=new Date();
+  const start=new Date();start.setDate(start.getDate()-(days-1));
+  const toVal=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  document.getElementById("range-start").value=toVal(start);
+  document.getElementById("range-end").value=toVal(end);
+  applyRangeFilter(name);
+}
+function setMidMonthRange(name){
+  /* "এই মাসের ২০ তারিখ থেকে পরের মাসের ২০ তারিখ পর্যন্ত" pattern */
+  const today=new Date();
+  let startY=today.getFullYear(),startM=today.getMonth();
+  if(today.getDate()<20){startM-=1;if(startM<0){startM=11;startY-=1;}}
+  const start=new Date(startY,startM,20);
+  const end=new Date(startY,startM+1,20);
+  const toVal=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  document.getElementById("range-start").value=toVal(start);
+  document.getElementById("range-end").value=toVal(end);
+  applyRangeFilter(name);
+}
+
+function renderPRange(name,startStr,endStr){
+  const e=employees[name];const c=cfg(name);
+  const att=getAttRange(e.records,startStr,endStr);
+  const totalDays=att.length;
+  const workableDays=att.filter(r=>!r.isFriday).length;
+  const fridaysInRange=att.filter(r=>r.isFriday).length;
+  const present=att.filter(r=>r.status==="present").length;
+  const half=att.filter(r=>r.status==="half").length;
+  const bonus=att.filter(r=>r.status==="bonus").length;
+  const csvLeave=att.filter(r=>r.status==="leave").length;
+  const rangeLabel=dInput(startStr).toLocaleDateString("bn-BD",{day:"numeric",month:"short",year:"numeric"})+" — "+dInput(endStr).toLocaleDateString("bn-BD",{day:"numeric",month:"short",year:"numeric"});
+  const eff=present+half*.5;
+  const absent=Math.max(0,workableDays-eff-csvLeave);
+  /* Check paid status for this range */
+  const paidRange=isPaidPeriod(employees[name].uid,startStr,endStr);
+  const paidAmtRange=getPaidAmount(employees[name].uid,startStr,endStr);
+
+  const rows=att.length?att.map(r=>`<tr class="${r.isFriday?"friday-row":r.status==="leave"?"leave-row":""}">
+    <td>${fmtDate(r.date)}${r.isFriday?` <span class="pill pill-friday" style="font-size:10px;padding:1px 5px">শুক্র</span>`:""}</td>
+    <td><span class="time-chip">${r.timeIn||"—"}</span></td><td><span class="time-chip">${r.timeOut||"—"}</span></td>
+    <td>${sbadge(r.status,r.isFriday)}</td></tr>`).join(""):`<tr><td colspan="4" style="padding:24px;text-align:center;color:var(--text3)">এই রেঞ্জে কোনো রেকর্ড নেই</td></tr>`;
+
+  document.getElementById("pbody").innerHTML=`
+    <div class="range-active-banner">
+      <i class="fa-solid fa-calendar-check"></i>
+      <span>কাস্টম রেঞ্জ সক্রিয়: <strong>${rangeLabel}</strong> (মোট ${totalDays} দিন, ${fridaysInRange} শুক্রবার বাদে ${workableDays} কার্যদিবস)</span>
+      ${paidRange?`<span class="pay-badge-paid" style="margin-left:auto"><i class="fa-solid fa-circle-check"></i>PAID</span>`:""}
+    </div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-val" style="color:var(--green)">${present}</div><div class="kpi-lbl">উপস্থিত দিন</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--yellow)">${half}</div><div class="kpi-lbl">হাফ টাইম</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--red)">${Math.round(absent)}</div><div class="kpi-lbl">অনুপস্থিত</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--accent)">${csvLeave}</div><div class="kpi-lbl">অনুমোদিত ছুটি (L)</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--orange)">${bonus}</div><div class="kpi-lbl">বোনাস দিন (শুক্র)</div></div>
+    </div>
+    ${paidRange?`<div class="range-active-banner" style="background:var(--green-bg);border-color:var(--green-border);color:var(--green);margin-bottom:14px"><i class="fa-solid fa-circle-check"></i><span>এই সময়কালের বেতন পরিশোধ করা হয়েছে — <strong>${fmtBN(paidAmtRange)}</strong></span></div>`:""}
+    <div class="flex-between" style="margin-bottom:11px;align-items:center">
+      <div class="card-title"><i class="fa-solid fa-list-check"></i>দৈনিক অ্যাটেন্ডেন্স লগ — ${rangeLabel}</div>
+      <button class="topbar-btn primary" onclick="dlPDFRange('${name.replace(/'/g,"\\'")}','${startStr}','${endStr}')"><i class="fa-solid fa-file-pdf"></i>PDF ইনভয়েস</button>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>তারিখ</th><th>ইন টাইম</th><th>আউট টাইম</th><th>অবস্থা</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function switchMo(name,mk2,btn){
+  document.querySelectorAll("#pmtabs .month-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const rs=document.getElementById("range-start"),re=document.getElementById("range-end");
+  if(rs)rs.value="";if(re)re.value="";
+  const[y,m]=mk2.split("-");renderPMonth(name,+y,+m);
+}
+function renderPMonth(name,year,month){
+  const e=employees[name];const c=cfg(name);
+  const att=getAtt(e.records,year,month);const wd=wdays(year,month);const fridays=friList(year,month);
+  const present=att.filter(r=>r.status==="present").length;const half=att.filter(r=>r.status==="half").length;
+  const bonus=att.filter(r=>r.status==="bonus").length;const csvLeave=att.filter(r=>r.status==="leave").length;
+  const eff=present+half*.5;const tLeave=c.leaveDays+csvLeave;const absent=Math.max(0,wd-eff-tLeave);
+  const perDay=c.salary/wd;const deduct=absent*perDay;const bonusAmt=bonus*perDay;const net=c.salary-deduct+bonusAmt;const mk2=year+"-"+month;
+  /* Check paid status */
+  const mStart=year+"-"+String(month+1).padStart(2,"0")+"-01";
+  const lastDay=new Date(year,month+1,0).getDate();
+  const mEnd=year+"-"+String(month+1).padStart(2,"0")+"-"+String(lastDay).padStart(2,"0");
+  const paid=isPaidPeriod(e.uid,mStart,mEnd);
+  const paidAmt=getPaidAmount(e.uid,mStart,mEnd);
+  const displayNet=paid?0:net;
+  const rows=att.length?att.map(r=>`<tr class="${r.isFriday?"friday-row":r.status==="leave"?"leave-row":""}">
+    <td>${fmtDate(r.date)}${r.isFriday?` <span class="pill pill-friday" style="font-size:10px;padding:1px 5px">শুক্র</span>`:""}</td>
+    <td><span class="time-chip">${r.timeIn||"—"}</span></td><td><span class="time-chip">${r.timeOut||"—"}</span></td>
+    <td>${sbadge(r.status,r.isFriday)}</td></tr>`).join(""):`<tr><td colspan="4" style="padding:24px;text-align:center;color:var(--text3)">এই মাসে কোনো রেকর্ড নেই</td></tr>`;
+  document.getElementById("pbody").innerHTML=`
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-val" style="color:var(--green)">${present}</div><div class="kpi-lbl">উপস্থিত দিন</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--yellow)">${half}</div><div class="kpi-lbl">হাফ টাইম</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--red)">${Math.round(absent)}</div><div class="kpi-lbl">অনুপস্থিত</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--accent)">${csvLeave}</div><div class="kpi-lbl">অনুমোদিত ছুটি (L)</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:var(--orange)">${bonus}</div><div class="kpi-lbl">বোনাস দিন (শুক্র)</div></div>
+    </div>
+    <div class="salary-breakdown section-gap">
+      <div class="flex-between" style="margin-bottom:14px">
+        <div class="card-title"><i class="fa-solid fa-calculator"></i>বেতন হিসাব — ${mlbl(mk2)}</div>
+        <button class="topbar-btn primary" onclick="dlPDF('${name.replace(/'/g,"\\'")}',${year},${month})"><i class="fa-solid fa-file-pdf"></i>PDF ইনভয়েস</button>
+      </div>
+      <div class="salary-row"><span class="lbl"><i class="fa-solid fa-wallet"></i>মূল বেতন</span><span class="val">${fmtBN(c.salary)}</span></div>
+      <div class="salary-row"><span class="lbl"><i class="fa-solid fa-calendar"></i>মোট কার্যদিবস (শুক্রবার বাদ)</span><span class="val">${wd} দিন</span></div>
+      <div class="salary-row"><span class="lbl"><i class="fa-solid fa-mosque"></i>শুক্রবার (সরকারি ছুটি)</span><span class="val">${fridays.length} দিন</span></div>
+      <div class="salary-row"><span class="lbl"><i class="fa-solid fa-coins"></i>প্রতিদিনের হার</span><span class="val">${fmtBN(perDay)}</span></div>
+      <div class="salary-row"><span class="lbl"><i class="fa-solid fa-umbrella-beach"></i>নির্ধারিত ছুটি</span><span class="val">${c.leaveDays} দিন</span></div>
+      <div class="salary-row"><span class="lbl"><i class="fa-solid fa-file-circle-check" style="color:var(--accent)"></i>অনুমোদিত ছুটি (CSV — L)</span><span class="val">${csvLeave} দিন</span></div>
+      <div class="salary-row"><span class="lbl"><i class="fa-solid fa-check-circle" style="color:var(--green)"></i>কার্যকর উপস্থিতি</span><span class="val">${present}+${half}×½ = ${eff} দিন</span></div>
+      <div class="salary-row deduct-row"><span class="lbl"><i class="fa-solid fa-minus-circle" style="color:var(--red)"></i>কর্তন (${Math.round(absent)} × ${fmtBN(perDay)})</span><span class="val">− ${fmtBN(deduct)}</span></div>
+      ${bonus?`<div class="salary-row bonus-row"><span class="lbl"><i class="fa-solid fa-star" style="color:var(--orange)"></i>শুক্রবার বোনাস (${bonus} × ${fmtBN(perDay)})</span><span class="val">+ ${fmtBN(bonusAmt)}</span></div>`:""}
+      ${paid?`<div class="salary-row" style="background:var(--green-bg);border-radius:8px;padding:9px 10px;margin:4px 0"><span class="lbl"><i class="fa-solid fa-circle-check" style="color:var(--green)"></i><strong style="color:var(--green)">পরিশোধ করা হয়েছে</strong></span><span class="val"><span class="pay-badge-paid"><i class="fa-solid fa-circle-check"></i>PAID ${fmtBN(paidAmt||net)}</span></span></div>`:""}
+      <div class="salary-row total-row"><span class="lbl"><i class="fa-solid fa-hand-holding-dollar"></i>প্রদেয় বেতন</span><span class="val" style="${paid?"color:var(--text3);text-decoration:line-through":""}">${paid?"৳ 0 (পরিশোধিত)":fmtBN(displayNet)}</span></div>
+    </div>
+    <div class="card-title" style="margin-bottom:11px"><i class="fa-solid fa-list-check"></i>দৈনিক অ্যাটেন্ডেন্স লগ</div>
+    <div class="table-wrap"><table><thead><tr><th>তারিখ</th><th>ইন টাইম</th><th>আউট টাইম</th><th>অবস্থা</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+/* ── LOG ── */
+function renderLog(){filterLog();}
+function filterLog(){
+  const q=(document.getElementById("log-search")?.value||"").toLowerCase();
+  const mo=document.getElementById("log-month")?.value||"";
+  const st=document.getElementById("log-status")?.value||"";
+  const rows=[...rawData].sort((a,b)=>pd(b.date)-pd(a.date)).filter(r=>{
+    if(q&&!r.name.toLowerCase().includes(q))return false;
+    if(mo&&mk(pd(r.date))!==mo)return false;
+    if(st){const fri=isFri(r.date);const s=r.isLeave?"leave":fri&&r.timeIn?"bonus":r.timeIn&&r.timeOut?"present":r.timeIn?"half":"absent";if(s!==st)return false;}
+    return true;
+  }).map(r=>{
+    const fri=isFri(r.date);const s=r.isLeave?"leave":fri&&r.timeIn?"bonus":r.timeIn&&r.timeOut?"present":r.timeIn?"half":"absent";
+    return`<tr class="${fri?"friday-row":s==="leave"?"leave-row":""}"><td>${fmtDate(r.date)}${fri?` <span class="pill pill-friday" style="font-size:10px;padding:1px 5px">শুক্র</span>`:""}</td><td><strong>${r.name}</strong></td><td style="color:var(--text3);font-size:12px">${r.uid}</td><td><span class="time-chip">${r.timeIn||"—"}</span></td><td><span class="time-chip">${r.timeOut||"—"}</span></td><td>${sbadge(s,fri)}</td></tr>`;
+  }).join("")||`<tr><td colspan="6"><div class="empty-state"><i class="fa-solid fa-search"></i><p>কোনো ফলাফল নেই</p></div></td></tr>`;
+  document.getElementById("log-body").innerHTML=rows;
+}
+
+/* ── REPORTS ── */
+function renderReports(){
+  const sel=document.getElementById("report-month");if(!sel)return;
+  const key=sel.value||allMonths[0]||"";if(!key)return;
+  const[y,m]=key.split("-");const year=+y,month=+m,wd=wdays(year,month);
+  const data=Object.entries(employees).map(([n,e])=>{
+    const a=getAtt(e.records,year,month);const present=a.filter(r=>r.status==="present").length;const half=a.filter(r=>r.status==="half").length;const bonus=a.filter(r=>r.status==="bonus").length;
+    const eff=present+half*.5;const pct=wd?Math.round(eff/wd*100):0;return{name:n,present,half,bonus,pct,color:cfg(n).color};
+  }).sort((a,b)=>b.pct-a.pct);
+  document.getElementById("report-bars").innerHTML=data.map(d=>`<div class="bar-row" style="margin-bottom:13px;align-items:center">
+    <div class="bar-label" style="width:130px;font-size:12px">${d.name}</div>
+    <div style="display:flex;align-items:center;gap:8px;flex:1">
+      <div class="bar-track" style="height:10px;flex:1"><div class="bar-fill" style="width:${d.pct}%;background:linear-gradient(90deg,${d.color},${d.color}aa)"></div></div>
+      <div style="width:38px;text-align:right;font-size:13px;font-weight:800;color:var(--text)">${d.pct}%</div>
+      <span class="pill pill-green" style="font-size:11px">${d.present}দিন</span>
+      <span class="pill pill-yellow" style="font-size:11px">${d.half}হাফ</span>
+      ${d.bonus?`<span class="pill pill-bonus" style="font-size:11px">${d.bonus}বোনাস</span>`:""}
+    </div></div>`).join("");
+  const mkR=(arr,cls)=>arr.map((d,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;transition:background .15s" onmouseover="this.style.background='var(--accent-bg)'" onmouseout="this.style.background=''">
+    <span style="color:var(--text3);width:18px;text-align:center;font-weight:800">${i+1}</span>
+    <div style="width:28px;height:28px;border-radius:50%;background:${d.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;flex-shrink:0;box-shadow:0 0 8px ${d.color}44">${ini(d.name)}</div>
+    <span style="flex:1;color:var(--text);font-weight:600">${d.name}</span>
+    <span class="pill ${cls}">${d.pct}%</span></div>`).join("");
+  document.getElementById("top-present").innerHTML=mkR(data.slice(0,5),"pill-green");
+  document.getElementById("top-absent").innerHTML=mkR([...data].sort((a,b)=>a.pct-b.pct).slice(0,5),"pill-red");
+}
+
+/* ── SALARY ── */
+function renderSalary(){
+  const sel=document.getElementById("sal-month");if(!sel)return;
+  const key=sel.value||allMonths[0]||"";if(!key)return;
+  const[y,m]=key.split("-");const year=+y,month=+m,wd=wdays(year,month);
+  document.getElementById("salary-body").innerHTML=Object.entries(employees).map(([n,e])=>{
+    const c=cfg(n);const a=getAtt(e.records,year,month);
+    const present=a.filter(r=>r.status==="present").length;const half=a.filter(r=>r.status==="half").length;
+    const bonus=a.filter(r=>r.status==="bonus").length;const csvL=a.filter(r=>r.status==="leave").length;
+    const eff=present+half*.5;const absent=Math.max(0,wd-eff-(c.leaveDays+csvL));
+    const perDay=c.salary/wd;const deduct=absent*perDay;const bonusAmt=bonus*perDay;const net=c.salary-deduct+bonusAmt;
+    const ph=PHOTOS[n];
+    const av=ph?`<img src="${ph}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid var(--border2);box-shadow:0 0 6px ${c.color}33" onerror="this.outerHTML='<div style=width:30px;height:30px;border-radius:50%;background:${c.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;box-shadow:0 0 8px ${c.color}44>${ini(n)}</div>'">`:`<div style="width:30px;height:30px;border-radius:50%;background:${c.color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;box-shadow:0 0 8px ${c.color}44;flex-shrink:0">${ini(n)}</div>`;
+    return`<tr>
+      <td><div style="display:flex;align-items:center;gap:8px">${av}<strong>${n}</strong></div></td>
+      <td>${fmtBN(c.salary)}</td><td><span class="pill pill-green">${present}</span></td><td><span class="pill pill-yellow">${half}</span></td>
+      <td><span class="pill pill-red">${Math.round(absent)}</span></td><td><span class="pill pill-blue">${csvL}</span></td>
+      <td><span class="pill pill-bonus">${bonus}</span></td>
+      <td style="color:var(--red);font-weight:700">−${fmtBN(deduct)}</td>
+      <td style="color:var(--orange);font-weight:700">+${fmtBN(bonusAmt)}</td>
+      <td style="color:var(--green);font-weight:800;text-shadow:0 0 12px rgba(22,163,74,.25)">${fmtBN(net)}</td>
+      <td><button class="topbar-btn" style="font-size:11px;padding:5px 10px;color:var(--red)" onclick="dlPDF('${n.replace(/'/g,"\\'")}',${year},${month})"><i class="fa-solid fa-file-pdf"></i></button></td>
+    </tr>`;
+  }).join("")||`<tr><td colspan="11"><div class="empty-state"><i class="fa-solid fa-file-invoice-dollar"></i><p>কোনো ডেটা নেই</p></div></td></tr>`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PDF INVOICE — Professional A4 — ASCII-only text
+   ═══════════════════════════════════════════════════════ */
+
+/* Check if a date range overlaps any paid period for this employee */
+function isPaidPeriod(uid,startStr,endStr){
+  if(!payData||!payData.length)return false;
+  const rows=getPayRows(uid);
+  if(!rows.length)return false;
+  const sD=dInput(startStr);const eD=dInput(endStr);
+  return rows.some(r=>{
+    if(!r.paid||!r.fromDate||!r.toDate)return false;
+    try{
+      /* Try parse dd/mm/yyyy or yyyy-mm-dd */
+      const parseFlex=s=>{
+        if(!s)return null;
+        if(s.includes("/"))return pd(s);
+        const[y,m,d]=s.split("-");return new Date(+y,+m-1,+d);
+      };
+      const rS=parseFlex(r.fromDate);const rE=parseFlex(r.toDate);
+      if(!rS||!rE)return false;
+      /* Overlap: ranges overlap if startA <= endB && endA >= startB */
+      return sD<=rE && eD>=rS;
+    }catch{return false;}
+  });
+}
+
+/* Get paid amount for a period */
+function getPaidAmount(uid,startStr,endStr){
+  if(!payData||!payData.length)return 0;
+  const rows=getPayRows(uid);
+  const sD=dInput(startStr);const eD=dInput(endStr);
+  let total=0;
+  rows.forEach(r=>{
+    if(!r.paid||!r.fromDate||!r.toDate)return;
+    try{
+      const parseFlex=s=>{if(s.includes("/"))return pd(s);const[y,m,d]=s.split("-");return new Date(+y,+m-1,+d);};
+      const rS=parseFlex(r.fromDate);const rE=parseFlex(r.toDate);
+      if(sD<=rE&&eD>=rS)total+=r.salary;
+    }catch{}
+  });
+  return total;
+}
+
+/* Range-based PDF Invoice */
+function dlPDFRange(name,startStr,endStr){
+  if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF library not loaded. Please reload.");return;}
+  const e=employees[name];if(!e)return;
+  const c=cfg(name);
+  const att=getAttRange(e.records,startStr,endStr);
+  const workableDays=att.filter(r=>!r.isFriday).length;
+  const fridaysInRange=att.filter(r=>r.isFriday).length;
+  const present=att.filter(r=>r.status==="present").length;
+  const half=att.filter(r=>r.status==="half").length;
+  const bonus=att.filter(r=>r.status==="bonus").length;
+  const csvLeave=att.filter(r=>r.status==="leave").length;
+  const totalLeave=c.leaveDays+csvLeave;
+  const eff=present+half*.5;
+  const absDays=Math.max(0,workableDays-eff-totalLeave);
+  const perDay=workableDays>0?Math.round(c.salary/workableDays):0;
+  const deduct=Math.round(absDays*perDay);
+  const bonusAmt=Math.round(bonus*perDay);
+  const grossNet=Math.round(eff*perDay)+bonusAmt;
+  /* Check paid status */
+  const paid=isPaidPeriod(e.uid,startStr,endStr);
+  const paidAmt=getPaidAmount(e.uid,startStr,endStr);
+  const finalNet=paid?0:grossNet;
+  const rangeLabel=dInput(startStr).toLocaleDateString("en-GB")+" to "+dInput(endStr).toLocaleDateString("en-GB");
+  _dlPDFCore(name,e,c,att,workableDays,fridaysInRange,present,half,bonus,csvLeave,totalLeave,eff,absDays,perDay,deduct,bonusAmt,finalNet,paid,paidAmt,rangeLabel,"RANGE-"+startStr+"-"+endStr);
+}
+
+function dlPDF(name,year,month){
+  if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF library not loaded. Please reload.");return;}
+  const e=employees[name];if(!e)return;
+  const c=cfg(name);const att=getAtt(e.records,year,month);const wd=wdays(year,month);
+  const fridays=friList(year,month);
+  const present=att.filter(r=>r.status==="present").length;
+  const half=att.filter(r=>r.status==="half").length;
+  const bonus=att.filter(r=>r.status==="bonus").length;
+  const csvL=att.filter(r=>r.status==="leave").length;
+  const totalLeave=c.leaveDays+csvL;
+  const eff=present+half*.5;
+  const absDays=Math.max(0,wd-eff-totalLeave);
+  const perDay=Math.round(c.salary/wd);
+  const deduct=Math.round(absDays*perDay);
+  const bonusAmt=Math.round(bonus*perDay);
+  const grossNet=c.salary-deduct+bonusAmt;
+  /* Check paid status from payData */
+  const mStart=year+"-"+String(month+1).padStart(2,"0")+"-01";
+  const lastDay=new Date(year,month+1,0).getDate();
+  const mEnd=year+"-"+String(month+1).padStart(2,"0")+"-"+String(lastDay).padStart(2,"0");
+  const paid=isPaidPeriod(e.uid,mStart,mEnd);
+  const paidAmt=getPaidAmount(e.uid,mStart,mEnd);
+  const finalNet=paid?0:grossNet;
+  const period=new Date(year,month).toLocaleString("en",{month:"long",year:"numeric"});
+  _dlPDFCore(name,e,c,att,wd,fridays.length,present,half,bonus,csvL,totalLeave,eff,absDays,perDay,deduct,bonusAmt,finalNet,paid,paidAmt,period,"INV-"+year+String(month+1).padStart(2,"0")+"-"+e.uid);
+}
+
+function _dlPDFCore(name,e,c,att,wd,fridayCount,present,half,bonus,csvL,totalLeave,eff,absDays,perDay,deduct,bonusAmt,net,isPaid,paidAmt,periodLabel,invNo){
+  if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF library not loaded.");return;}
+
+  /* ASCII-only strings for PDF */
+  const genDate=new Date().toLocaleDateString("en-GB");
+  const period=periodLabel;
+  const [eR,eG,eB]=rgb(c.color);
+
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"mm",format:"a4"});
+  const PW=210,PH=297,L=14,R=14,TW=PW-L-R;
+
+  /* ====== PAGE 1: SALARY INVOICE ====== */
+
+  /* — Header band — */
+  doc.setFillColor(37,99,235);
+  doc.rect(0,0,PW,50,"F");
+  /* Darker top accent line */
+  doc.setFillColor(29,78,216);
+  doc.rect(0,0,PW,3,"F");
+  /* Right decorative circle */
+  doc.setFillColor(59,130,246,0.3);
+  doc.setFillColor(59,130,246);
+  doc.circle(PW-20,25,30,"F");
+  doc.setFillColor(37,99,235);
+  doc.circle(PW-20,25,24,"F");
+
+  /* Logo white box */
+  doc.setFillColor(255,255,255);
+  doc.roundedRect(L,10,30,30,6,6,"F");
+  doc.setTextColor(37,99,235);
+  doc.setFontSize(22);doc.setFont("helvetica","bold");
+  doc.text("HR",L+15,29,{align:"center"});
+
+  /* Company name & tagline */
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(20);doc.setFont("helvetica","bold");
+  doc.text("ATTENDANCE MANAGER",L+36,22);
+  doc.setFontSize(8.5);doc.setFont("helvetica","normal");
+  doc.setTextColor(191,219,254);
+  doc.text("HR Management System  |  Smart Attendance Platform",L+36,29);
+
+  /* SALARY INVOICE badge */
+  doc.setFillColor(255,255,255);
+  doc.roundedRect(L+36,33,52,10,3,3,"F");
+  doc.setTextColor(37,99,235);
+  doc.setFontSize(9);doc.setFont("helvetica","bold");
+  doc.text("SALARY INVOICE",L+36+26,40,{align:"center"});
+
+  /* Invoice meta — right side */
+  doc.setFontSize(8);doc.setFont("helvetica","normal");
+  doc.setTextColor(219,234,254);
+  doc.text("Invoice No:",PW-R-60,16);doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.text(invNo,PW-R,16,{align:"right"});
+  doc.setFont("helvetica","normal");doc.setTextColor(219,234,254);
+  doc.text("Period   :",PW-R-60,23);doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.text(period,PW-R,23,{align:"right"});
+  doc.setFont("helvetica","normal");doc.setTextColor(219,234,254);
+  doc.text("Generated:",PW-R-60,30);doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.text(genDate,PW-R,30,{align:"right"});
+
+  let Y=58;
+
+  /* — Employee Info Card — */
+  doc.setFillColor(248,250,252);
+  doc.roundedRect(L,Y,TW,32,5,5,"F");
+  doc.setDrawColor(226,232,240);doc.setLineWidth(0.4);
+  doc.roundedRect(L,Y,TW,32,5,5,"S");
+  /* Color left stripe */
+  doc.setFillColor(eR,eG,eB);
+  doc.roundedRect(L,Y,4,32,3,3,"F");
+  doc.rect(L+2,Y,4,32,"F");
+  /* Avatar circle */
+  doc.setFillColor(eR,eG,eB);
+  doc.circle(L+18,Y+16,10,"F");
+  doc.setFillColor(255,255,255);
+  doc.circle(L+18,Y+16,8,"F");
+  doc.setFillColor(eR,eG,eB);
+  doc.circle(L+18,Y+16,6.5,"F");
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(11);doc.setFont("helvetica","bold");
+  doc.text(ini(name).toUpperCase(),L+18,Y+19,{align:"center"});
+  /* Employee details */
+  doc.setTextColor(15,23,42);doc.setFontSize(14);doc.setFont("helvetica","bold");
+  doc.text(name,L+32,Y+11);
+  doc.setFontSize(8.5);doc.setFont("helvetica","normal");doc.setTextColor(100,116,139);
+  doc.text("Employee ID  : "+e.uid,L+32,Y+19);
+  doc.text("Department   : General  |  Month: "+period,L+32,Y+26);
+  /* Right badges */
+  const bx=PW-R-86;
+  doc.setFillColor(239,246,255);doc.roundedRect(bx,Y+4,40,10,3,3,"F");
+  doc.setTextColor(37,99,235);doc.setFontSize(6.5);doc.setFont("helvetica","bold");
+  doc.text("BASE SALARY",bx+20,Y+9.5,{align:"center"});
+  doc.setFontSize(9);doc.text(fmtPDF(c.salary),bx+20,Y+14,{align:"center"});
+  doc.setFillColor(240,253,244);doc.roundedRect(bx+43,Y+4,40,10,3,3,"F");
+  doc.setTextColor(22,163,74);doc.setFontSize(6.5);doc.setFont("helvetica","bold");
+  doc.text("NET PAYABLE",bx+63,Y+9.5,{align:"center"});
+  doc.setFontSize(9);doc.text(fmtPDF(net),bx+63,Y+14,{align:"center"});
+  Y+=38;
+
+  /* — KPI Summary Row (6 boxes) — */
+  const kpis=[
+    {l:"Work Days",    v:String(wd),              s:"Fri excluded",           c:[37,99,235]},
+    {l:"Present",      v:String(present),          s:"full days",              c:[22,163,74]},
+    {l:"Half Days",    v:String(half),             s:"x0.5 counted",           c:[217,119,6]},
+    {l:"Absent",       v:String(Math.round(absDays)),s:"deducted",             c:[220,38,38]},
+    {l:"Leave (L)",    v:String(totalLeave),       s:"config+sheet",           c:[37,99,235]},
+    {l:"Fri Bonus",    v:String(bonus),            s:"extra pay",              c:[234,88,12]},
+  ];
+  const kW=(TW-10)/6;const kH=20;
+  kpis.forEach((k,i)=>{
+    const kx=L+i*(kW+2);
+    doc.setFillColor(248,250,252);doc.roundedRect(kx,Y,kW,kH,3,3,"F");
+    doc.setDrawColor(226,232,240);doc.roundedRect(kx,Y,kW,kH,3,3,"S");
+    doc.setFillColor(...k.c);doc.rect(kx,Y,kW,2,"F");
+    doc.setTextColor(...k.c);doc.setFontSize(14);doc.setFont("helvetica","bold");
+    doc.text(k.v,kx+kW/2,Y+12,{align:"center"});
+    doc.setTextColor(71,85,105);doc.setFontSize(5.5);doc.setFont("helvetica","bold");
+    doc.text(k.l,kx+kW/2,Y+16.5,{align:"center"});
+    doc.setTextColor(148,163,184);doc.setFontSize(5);doc.setFont("helvetica","normal");
+    doc.text(k.s,kx+kW/2,Y+19.5,{align:"center"});
+  });
+  Y+=kH+6;
+
+  /* — Salary Calculation Table — */
+  doc.setFillColor(37,99,235);doc.roundedRect(L,Y,TW,9,3,3,"F");
+  doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont("helvetica","bold");
+  doc.text("  SALARY CALCULATION",L+2,Y+6);
+  Y+=9;
+
+  /* Col headers */
+  doc.setFillColor(248,250,252);doc.rect(L,Y,TW,7,"F");
+  doc.setDrawColor(226,232,240);doc.line(L,Y+7,L+TW,Y+7);
+  doc.setTextColor(100,116,139);doc.setFontSize(7);doc.setFont("helvetica","bold");
+  const C1=L+3, C2=L+TW*0.52, C3=L+TW*0.68, C4=L+TW;
+  doc.text("DESCRIPTION",C1,Y+5);
+  doc.text("RATE",C2,Y+5);
+  doc.text("QUANTITY",C3,Y+5);
+  doc.text("AMOUNT",C4,Y+5,{align:"right"});
+  Y+=7;
+
+  const configLeave=totalLeave-csvL;
+  const sRows=[
+    {d:"Basic Salary (Monthly)",          r:"—",                  q:"—",                       a:fmtPDF(c.salary),         tc:[15,23,42], bg:false},
+    {d:"Daily Rate (Salary / Work Days)", r:fmtPDF(c.salary),     q:wd+" work days",            a:fmtPDF(perDay)+" /day",   tc:[71,85,105],bg:true},
+    {d:"Weekly Off (Fridays)",            r:"0 (exempt)",          q:fridayCount+" Fridays",     a:"No Deduction",           tc:[124,58,237],bg:false},
+    {d:"Config Leave Allowance",          r:"0 (exempt)",          q:configLeave+" days",        a:"No Deduction",           tc:[37,99,235], bg:true},
+  ];
+  if(csvL)sRows.push({d:"Approved Leave from Sheet (L)",r:"0 (exempt)",q:csvL+" days",a:"No Deduction",tc:[37,99,235],bg:false});
+  sRows.push({d:"Effective Attendance",   r:fmtPDF(perDay)+" /day",q:eff+" eff. days",          a:fmtPDF(Math.round(eff*perDay)),tc:[22,163,74],bg:!csvL});
+  sRows.push({d:"Absence Deduction ("+Math.round(absDays)+" days)",r:fmtPDF(perDay)+" /day",q:Math.round(absDays)+" days",a:"- "+fmtPDF(deduct),tc:[220,38,38],bg:!!csvL});
+  if(bonus)sRows.push({d:"Friday Bonus (worked on holiday)",r:fmtPDF(perDay)+" /day",q:bonus+" days",a:"+ "+fmtPDF(bonusAmt),tc:[234,88,12],bg:false});
+  if(isPaid)sRows.push({d:"Already Paid (recorded in payment history)",r:"—",q:"—",a:"- "+fmtPDF(paidAmt||c.salary),tc:[22,163,74],bg:true});
+
+  const rH=7.2;
+  sRows.forEach((row)=>{
+    if(row.bg){doc.setFillColor(248,250,252);doc.rect(L,Y,TW,rH,"F");}
+    doc.setDrawColor(241,245,249);doc.line(L,Y+rH,L+TW,Y+rH);
+    doc.setTextColor(...row.tc);
+    doc.setFontSize(8);doc.setFont("helvetica",row.tc[0]===15?"bold":"normal");
+    doc.text(row.d,C1,Y+5.1);
+    doc.setFontSize(7.5);doc.setFont("helvetica","normal");
+    doc.text(row.r,C2,Y+5.1);
+    doc.text(row.q,C3,Y+5.1);
+    doc.setFont("helvetica","bold");
+    doc.text(row.a,C4,Y+5.1,{align:"right"});
+    Y+=rH;
+  });
+  Y+=2;
+
+  /* Separator */
+  doc.setDrawColor(37,99,235);doc.setLineWidth(0.6);doc.line(L,Y,L+TW,Y);Y+=4;
+
+  /* Net Payable — shows PAID stamp if already paid */
+  if(isPaid){
+    doc.setFillColor(240,253,244);doc.roundedRect(L,Y,TW,13,3,3,"F");
+    doc.setDrawColor(22,163,74);doc.setLineWidth(0.5);doc.roundedRect(L,Y,TW,13,3,3,"S");
+    doc.setFillColor(22,163,74);doc.roundedRect(L,Y,4,13,2,2,"F");doc.rect(L+2,Y,3,13,"F");
+    doc.setTextColor(22,163,74);doc.setFontSize(10);doc.setFont("helvetica","bold");
+    doc.text("NET PAYABLE SALARY",L+8,Y+6);
+    doc.setFontSize(8);doc.text("(Already Paid)",L+8,Y+11);
+    doc.setFontSize(14);doc.text("BDT 0",C4,Y+9,{align:"right"});
+    /* PAID STAMP */
+    doc.setFillColor(22,163,74);
+    doc.roundedRect(C4-45,Y-2,45,17,4,4,"F");
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(14);doc.setFont("helvetica","bold");
+    doc.text("PAID",C4-22,Y+9,{align:"center"});
+    doc.setFontSize(7);doc.text(fmtPDF(paidAmt||c.salary),C4-22,Y+13.5,{align:"center"});
+  }else{
+    doc.setFillColor(240,253,244);doc.roundedRect(L,Y,TW,13,3,3,"F");
+    doc.setDrawColor(22,163,74);doc.setLineWidth(0.5);doc.roundedRect(L,Y,TW,13,3,3,"S");
+    doc.setFillColor(22,163,74);doc.roundedRect(L,Y,4,13,2,2,"F");doc.rect(L+2,Y,3,13,"F");
+    doc.setTextColor(22,163,74);doc.setFontSize(10);doc.setFont("helvetica","bold");
+    doc.text("NET PAYABLE SALARY",L+8,Y+9);
+    doc.setFontSize(14);doc.text(fmtPDF(net),C4,Y+9,{align:"right"});
+  }
+  doc.setLineWidth(0.2);Y+=18;
+
+  /* Remarks & Signature section */
+  const halfW=(TW-6)/2;
+  /* Remarks box */
+  doc.setFillColor(248,250,252);doc.roundedRect(L,Y,halfW,22,3,3,"F");
+  doc.setDrawColor(226,232,240);doc.roundedRect(L,Y,halfW,22,3,3,"S");
+  doc.setTextColor(37,99,235);doc.setFontSize(7.5);doc.setFont("helvetica","bold");
+  doc.text("REMARKS",L+4,Y+7);
+  doc.setTextColor(100,116,139);doc.setFont("helvetica","normal");doc.setFontSize(7);
+  doc.text("System-generated salary invoice.",L+4,Y+13);
+  doc.text("No manual signature required.",L+4,Y+18);
+  /* Authorized Signature box */
+  const sx=L+halfW+6;
+  doc.setFillColor(248,250,252);doc.roundedRect(sx,Y,halfW,22,3,3,"F");
+  doc.setDrawColor(226,232,240);doc.roundedRect(sx,Y,halfW,22,3,3,"S");
+  doc.setTextColor(37,99,235);doc.setFontSize(7.5);doc.setFont("helvetica","bold");
+  doc.text("AUTHORIZED SIGNATURE",sx+4,Y+7);
+  doc.setDrawColor(148,163,184);doc.setLineWidth(0.4);
+  doc.line(sx+4,Y+19,sx+halfW-4,Y+19);
+  doc.setTextColor(148,163,184);doc.setFontSize(7);doc.setFont("helvetica","normal");
+  doc.text("HR Manager",sx+halfW/2+4,Y+22,{align:"center"});
+  Y+=26;
+
+  /* Page 1 Footer */
+  doc.setFillColor(37,99,235);doc.rect(0,PH-12,PW,12,"F");
+  doc.setFillColor(29,78,216);doc.rect(0,PH-12,PW,2,"F");
+  doc.setTextColor(191,219,254);doc.setFontSize(7);doc.setFont("helvetica","normal");
+  doc.text("Attendance Manager HR System",L,PH-5.5);
+  doc.text(invNo+" | "+period+" | "+genDate,PW/2,PH-5.5,{align:"center"});
+  doc.text("Page 1 of 2",PW-R,PH-5.5,{align:"right"});
+
+  /* ====== PAGE 2: ATTENDANCE LOG ====== */
+  doc.addPage();
+
+  /* Header */
+  doc.setFillColor(37,99,235);doc.rect(0,0,PW,38,"F");
+  doc.setFillColor(29,78,216);doc.rect(0,0,PW,3,"F");
+  /* Decorative circle */
+  doc.setFillColor(59,130,246);doc.circle(PW-15,19,22,"F");
+  doc.setFillColor(37,99,235);doc.circle(PW-15,19,16,"F");
+
+  /* Avatar */
+  doc.setFillColor(eR,eG,eB);doc.circle(L+14,19,10,"F");
+  doc.setFillColor(255,255,255);doc.circle(L+14,19,7.5,"F");
+  doc.setFillColor(eR,eG,eB);doc.circle(L+14,19,5.5,"F");
+  doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont("helvetica","bold");
+  doc.text(ini(name).toUpperCase(),L+14,22,{align:"center"});
+
+  doc.setFontSize(15);doc.setFont("helvetica","bold");doc.setTextColor(255,255,255);
+  doc.text("ATTENDANCE LOG",L+28,14);
+  doc.setFontSize(8.5);doc.setFont("helvetica","normal");doc.setTextColor(191,219,254);
+  doc.text(name+"  |  ID: "+e.uid+"  |  "+period,L+28,21);
+
+  /* Stats strip */
+  const stats2=[
+    {t:"Present: "+present, c:[167,243,208]},
+    {t:"Half: "+half,        c:[253,230,138]},
+    {t:"Absent: "+Math.round(absDays),  c:[254,202,202]},
+    {t:"Leave(L): "+csvL,   c:[191,219,254]},
+    {t:"Fri Bonus: "+bonus,  c:[254,215,170]},
+    {t:"Work Days: "+wd,     c:[255,255,255]},
+  ];
+  let sx2=L+28;
+  stats2.forEach(s=>{
+    doc.setTextColor(...s.c);doc.setFontSize(7.5);doc.setFont("helvetica","bold");
+    doc.text(s.t,sx2,29);sx2+=30;
+  });
+
+  Y=45;
+
+  /* Table header */
+  doc.setFillColor(248,250,252);doc.rect(L,Y,TW,8,"F");
+  doc.setFillColor(37,99,235);doc.rect(L,Y,TW,2.5,"F");
+  doc.setDrawColor(226,232,240);doc.line(L,Y+8,L+TW,Y+8);
+  doc.setTextColor(71,85,105);doc.setFontSize(7.5);doc.setFont("helvetica","bold");
+  const LC=[L+3,L+36,L+68,L+100,L+130,L+TW];
+  const lhdr=["#","DATE","IN TIME","OUT TIME","STATUS","NOTE"];
+  lhdr.forEach((h,i)=>i===5?doc.text(h,LC[i],Y+5.8,{align:"right"}):doc.text(h,LC[i],Y+5.8));
+  Y+=8;
+
+  const rh=6.8;
+  att.forEach((row,i)=>{
+    /* row background */
+    const isLeaveRow=row.status==="leave";
+    const isBonusRow=row.status==="bonus";
+    if(isLeaveRow)       doc.setFillColor(239,246,255);
+    else if(isBonusRow)  doc.setFillColor(255,247,237);
+    else if(row.isFriday)doc.setFillColor(245,243,255);
+    else if(i%2===0)     doc.setFillColor(255,255,255);
+    else                 doc.setFillColor(248,250,252);
+    doc.rect(L,Y,TW,rh,"F");
+
+    /* left color tag */
+    const tc=row.status==="present"?[22,163,74]:row.status==="half"?[217,119,6]:row.status==="bonus"?[234,88,12]:row.status==="leave"?[37,99,235]:row.isFriday?[124,58,237]:[220,38,38];
+    doc.setFillColor(...tc);doc.rect(L,Y,2,rh,"F");
+
+    doc.setDrawColor(226,232,240);doc.line(L,Y+rh,L+TW,Y+rh);
+
+    /* Row number */
+    doc.setTextColor(148,163,184);doc.setFontSize(7);doc.setFont("helvetica","normal");
+    doc.text(String(i+1),LC[0],Y+4.7);
+
+    /* Date */
+    doc.setTextColor(15,23,42);doc.setFontSize(7.5);
+    doc.text(row.date+(row.isFriday?" (Fri)":""),LC[1],Y+4.7);
+
+    /* In / Out */
+    if(row.timeIn){doc.setTextColor(22,163,74);}else{doc.setTextColor(148,163,184);}
+    doc.text(row.timeIn||"--:--",LC[2],Y+4.7);
+    if(row.timeOut){doc.setTextColor(22,163,74);}else{doc.setTextColor(148,163,184);}
+    doc.text(row.timeOut||"--:--",LC[3],Y+4.7);
+
+    /* Status */
+    const stMap={present:"Present",half:"Half Day",bonus:"Bonus Day",leave:"Appr. Leave",absent:"Absent"};
+    const stTxt=(row.isFriday&&row.status!=="bonus"&&row.status!=="leave")?"Holiday":stMap[row.status]||"Absent";
+    doc.setTextColor(...tc);doc.setFont("helvetica","bold");doc.setFontSize(7.5);
+    doc.text(stTxt,LC[4],Y+4.7);
+
+    /* Note */
+    doc.setFont("helvetica","normal");doc.setTextColor(148,163,184);doc.setFontSize(7);
+    const note=row.isFriday&&row.status==="bonus"?"Worked on holiday":row.status==="leave"?"L (CSV sheet)":row.isFriday?"Weekly off":"";
+    if(note)doc.text(note,LC[5],Y+4.7,{align:"right"});
+
+    Y+=rh;
+
+    /* Page overflow */
+    if(Y>PH-18&&i<att.length-1){
+      /* footer current page */
+      doc.setFillColor(37,99,235);doc.rect(0,PH-12,PW,12,"F");
+      doc.setFillColor(29,78,216);doc.rect(0,PH-12,PW,2,"F");
+      doc.setTextColor(191,219,254);doc.setFontSize(7);doc.setFont("helvetica","normal");
+      doc.text("Attendance Manager HR System",L,PH-5.5);
+      doc.text(invNo+" | "+period,PW/2,PH-5.5,{align:"center"});
+      doc.text("Continued...",PW-R,PH-5.5,{align:"right"});
+      doc.addPage();
+      /* mini header */
+      doc.setFillColor(37,99,235);doc.rect(0,0,PW,16,"F");
+      doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont("helvetica","bold");
+      doc.text("ATTENDANCE LOG (cont.) — "+name+"  |  "+period,L,11);
+      Y=22;
+      /* re-draw table header */
+      doc.setFillColor(248,250,252);doc.rect(L,Y,TW,8,"F");doc.setFillColor(37,99,235);doc.rect(L,Y,TW,2.5,"F");
+      doc.setTextColor(71,85,105);doc.setFontSize(7.5);doc.setFont("helvetica","bold");
+      lhdr.forEach((h,i)=>i===5?doc.text(h,LC[i],Y+5.8,{align:"right"}):doc.text(h,LC[i],Y+5.8));
+      Y+=8;
+    }
+  });
+
+  /* Page 2 Footer */
+  doc.setFillColor(37,99,235);doc.rect(0,PH-12,PW,12,"F");
+  doc.setFillColor(29,78,216);doc.rect(0,PH-12,PW,2,"F");
+  doc.setTextColor(191,219,254);doc.setFontSize(7);doc.setFont("helvetica","normal");
+  doc.text("Attendance Manager HR System",L,PH-5.5);
+  doc.text(invNo+" | "+period+" | "+genDate,PW/2,PH-5.5,{align:"center"});
+  doc.text("Page 2 of 2",PW-R,PH-5.5,{align:"right"});
+
+  const safeLabel=period.replace(/[^a-zA-Z0-9_\-]/g,"_");
+  doc.save("Invoice_"+name.replace(/\s+/g,"_")+"_"+safeLabel+".pdf");
+  toast("PDF Invoice downloading...");
+}
+
+/* ── CSV DOWNLOADS ── */
+function downloadSalarySheet(){
+  const sel=document.getElementById("sal-month");if(!sel)return;
+  const key=sel.value||allMonths[0]||"";if(!key)return;
+  const[y,m]=key.split("-");const year=+y,month=+m,wd=wdays(year,month);
+  let csv="\uFEFFSalary Summary - "+mlbl(key)+"\n\nEmployee,Base Salary,Present,Half,Absent,Leave(L),Bonus,Deduction,Bonus Amt,Net Payable\n";
+  Object.entries(employees).forEach(([n,e])=>{
+    const c=cfg(n);const a=getAtt(e.records,year,month);
+    const pr=a.filter(r=>r.status==="present").length;const ha=a.filter(r=>r.status==="half").length;
+    const bo=a.filter(r=>r.status==="bonus").length;const cl=a.filter(r=>r.status==="leave").length;
+    const ef=pr+ha*.5;const ab=Math.max(0,wd-ef-(c.leaveDays+cl));
+    const pd2=c.salary/wd;const de=ab*pd2;const bam=bo*pd2;const nt=c.salary-de+bam;
+    csv+=`${n},${Math.round(c.salary)},${pr},${ha},${Math.round(ab)},${cl},${bo},${Math.round(de)},${Math.round(bam)},${Math.round(nt)}\n`;
+  });
+  dlCSV(csv,"Salary_"+mlbl(key)+".csv");toast("বেতন শিট ডাউনলোড হচ্ছে...");
+}
+function downloadAllReport(){
+  if(curPage==="salary"){downloadSalarySheet();return;}
+  const now=new Date();const key=mk(now);const wd=wdays(now.getFullYear(),now.getMonth());
+  let csv="\uFEFFAttendance Report - "+mlbl(key)+"\n\nEmployee,Present,Half,Absent,Bonus,Pct,Net Salary\n";
+  Object.entries(employees).forEach(([n,e])=>{
+    const c=cfg(n);const a=getAtt(e.records,now.getFullYear(),now.getMonth());
+    const pr=a.filter(r=>r.status==="present").length;const ha=a.filter(r=>r.status==="half").length;
+    const bo=a.filter(r=>r.status==="bonus").length;const cl=a.filter(r=>r.status==="leave").length;
+    const ef=pr+ha*.5;const ab=Math.max(0,wd-ef-(c.leaveDays+cl));
+    const pct=wd?Math.round(ef/wd*100):0;const nt=c.salary-ab*(c.salary/wd)+bo*(c.salary/wd);
+    csv+=`${n},${pr},${ha},${Math.round(ab)},${bo},${pct}%,${Math.round(nt)}\n`;
+  });
+  dlCSV(csv,"Report_"+mlbl(key)+".csv");toast("রিপোর্ট ডাউনলোড হচ্ছে...");
+}
+function dlCSV(content,fname){const blob=new Blob([content],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=fname;a.click();URL.revokeObjectURL(url);}
+
+/* ── NAV ── */
+const PTITLES={dashboard:"ড্যাশবোর্ড",employees:"কর্মচারী তালিকা",profile:"কর্মচারী প্রোফাইল",attendance:"অ্যাটেন্ডেন্স লগ",reports:"রিপোর্ট ও বিশ্লেষণ",salary:"বেতন সারসংক্ষেপ",payhistory:"বেতন পরিশোধ ইতিহাস"};
+function showPage(id){
+  curPage=id;
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+id)?.classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+  const nm={dashboard:0,employees:1,attendance:2,reports:3,salary:4,payhistory:5};
+  document.querySelectorAll(".nav-item")[nm[id]]?.classList.add("active");
+  document.getElementById("page-title").textContent=PTITLES[id]||id;
+  closeSidebar();
+  if(id==="reports")renderReports();
+  if(id==="salary")renderSalary();
+  if(id==="payhistory")renderPayHistory();
+}
+function toggleSidebar(){document.getElementById("sidebar").classList.toggle("open");document.getElementById("overlay").classList.toggle("show");}
+function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").classList.remove("show");}
+
+document.getElementById("page-date").textContent=new Date().toLocaleDateString("bn-BD",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+loadData();
+</script>
+</body>
+</html>
