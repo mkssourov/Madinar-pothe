@@ -751,7 +751,7 @@ function renderProfile(name){
       <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,${c.color},#7c3aed);border-radius:14px 14px 0 0"></div>
       ${av}
       <div class="profile-info">
-        <h2>${name}</h2><p>কর্মচারী আইডি: ${e.uid}</p>
+        <h2>${name}</h2><p>Employee ID: ${e.uid}</p>
         <div class="profile-meta">
           <span class="pill pill-blue"><i class="fa-solid fa-money-bill"></i>${fmtBN(c.salary)} / মাস</span>
           <span class="pill pill-green"><i class="fa-solid fa-umbrella-beach"></i>${c.leaveDays} ছুটি / মাস</span>
@@ -1133,7 +1133,7 @@ function _dlPDFCore(name,e,c,att,wd,fridayCount,present,half,bonus,csvL,totalLea
   /* Company name & tagline */
   doc.setTextColor(255,255,255);
   doc.setFontSize(20);doc.setFont("helvetica","bold");
-  doc.text("ATTENDANCE MANAGER",L+36,22);
+  doc.text("ATTENDANCE ",L+36,22);
   doc.setFontSize(8.5);doc.setFont("helvetica","normal");
   doc.setTextColor(191,219,254);
   doc.text("HR Management System  |  Smart Attendance Platform",L+36,29);
